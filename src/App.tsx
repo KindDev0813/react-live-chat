@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import Navbar from './components/Navbar';
+import DashBoard from './pages/DashBoard';
 
 const App: React.FC = () => {
   return (
@@ -16,6 +17,7 @@ const App: React.FC = () => {
           <Route path="/" exact component={Home} />
           <Route path="/signup" component={SignUp} />
           <Route path="/login" component={Login} />
+          <Route path="/dashboard" component={DashBoard} />
         </Container>
       </Switch>
     </ChakraProvider>

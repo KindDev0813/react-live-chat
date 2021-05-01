@@ -7,6 +7,9 @@ import {
 } from '@chakra-ui/form-control';
 import { Input } from '@chakra-ui/input';
 import { Box, Text } from '@chakra-ui/layout';
+import { useAuth } from '../state/authState';
+import { useHistory } from 'react-router-dom';
+import { useToast } from '@chakra-ui/toast';
 
 interface LoginError {
   email?: string;
@@ -14,15 +17,52 @@ interface LoginError {
 }
 
 const Login = () => {
+  const toast = useToast();
+  const history = useHistory();
   const [data, setData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState<LoginError>({});
   const [loading, setLoading] = useState(false);
+  const login = useAuth((state) => state.login);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
   const handleLogin = async () => {
-    console.log('form submit');
+    let validationErrors: LoginError = {};
+    if (data.email.trim() === '')
+      validationErrors.email = 'Email cannot be empty';
+    if (data.password.trim() === '')
+      validationErrors.password = 'Password cannot be empty';
+    if (Object.keys(validationErrors).length > 0)
+      return setErrors(validationErrors);
+
+    try {
+      setLoading(true);
+      await login(data.email, data.password);
+      toast({
+        title: 'Logged In',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+      history.push('/dashboard');
+    } catch (err) {
+      console.log(err.code);
+      console.log(err.message);
+      console.log('failed to login');
+      if (err.code === 'auth/user-not-found') {
+        toast({
+          title: 'User not found',
+          description: 'Signup to create an account',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+      if (err.code === 'auth/wrong-password')
+        setErrors({ ...errors, password: 'Incorrect password' });
+    }
+    setLoading(false);
   };
   return (
     <Box

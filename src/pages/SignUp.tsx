@@ -6,7 +6,12 @@ import {
   FormLabel,
 } from '@chakra-ui/form-control';
 import { Input } from '@chakra-ui/input';
-import { Box, Flex, Text } from '@chakra-ui/layout';
+import { Box, Text } from '@chakra-ui/layout';
+import { validateInputs } from '../utils/validators';
+import { db } from '../firebase';
+import { useAuth } from '../state/authState';
+import { useToast } from '@chakra-ui/toast';
+import { useHistory } from 'react-router-dom';
 
 interface SignUpError {
   username?: string;
@@ -15,15 +20,62 @@ interface SignUpError {
 }
 
 const SignUp = () => {
+  const toast = useToast();
+  const history = useHistory();
+
   const [data, setData] = useState({ username: '', email: '', password: '' });
   const [errors, setErrors] = useState<SignUpError>({});
   const [loading, setLoading] = useState(false);
+  const signup = useAuth((state) => state.signup);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
+
   const handleSignUp = async () => {
-    console.log('form submit');
+    const validationErrors = validateInputs(data);
+    if (Object.keys(validationErrors).length > 0)
+      return setErrors(validationErrors);
+
+    try {
+      setErrors({});
+      setLoading(true);
+      const qs = await db
+        .collection('users')
+        .where('username', '==', data.username)
+        .limit(1)
+        .get();
+
+      if (!qs.empty) {
+        setLoading(false);
+        return setErrors({ ...errors, username: 'Username is taken' });
+      }
+
+      const { user } = await signup(data.email, data.password);
+      if (!user) return;
+      user.updateProfile({ displayName: data.username });
+
+      await db
+        .collection('users')
+        .doc(user.uid)
+        .set({ email: data.email, username: data.username });
+
+      toast({
+        title: 'Account created.',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+      history.push('/dashboard');
+      //
+    } catch (err) {
+      console.log(err.code);
+      console.log(err.message);
+      console.log('error in SignUp.tsx');
+      if (err.code === 'auth/email-already-in-use')
+        setErrors({ ...errors, email: err.message });
+    }
+    setLoading(false);
   };
 
   return (
