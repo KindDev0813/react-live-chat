@@ -5,7 +5,7 @@ import { Button } from '@chakra-ui/button';
 
 const Navbar = () => {
   return (
-    <Box py="3">
+    <Box py="1" shadow="md">
       <Box
         w="90%"
         h="100%"
@@ -16,7 +16,7 @@ const Navbar = () => {
         justifyContent="space-between"
       >
         <Text
-          fontSize="2xl"
+          fontSize="4xl"
           fontWeight="bold"
           color="teal.700"
           as={Link}
@@ -26,10 +26,22 @@ const Navbar = () => {
         </Text>
         <Stack direction={{ base: 'column', sm: 'row' }}>
           <>
-            <Button as={Link} to="/login" colorScheme="gray" variant="ghost">
+            <Button
+              as={Link}
+              fontWeight="normal"
+              to="/login"
+              colorScheme="gray"
+              variant="ghost"
+            >
               Login
             </Button>
-            <Button as={Link} to="/signup" colorScheme="gray" variant="ghost">
+            <Button
+              as={Link}
+              fontWeight="normal"
+              to="/signup"
+              colorScheme="gray"
+              variant="ghost"
+            >
               SignUp
             </Button>
           </>

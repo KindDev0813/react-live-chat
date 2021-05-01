@@ -12,7 +12,7 @@ const App: React.FC = () => {
     <ChakraProvider>
       <Navbar />
       <Switch>
-        <Container maxW="container.xl">
+        <Container maxW="container.xl" pt="2">
           <Route path="/" exact component={Home} />
           <Route path="/signup" component={SignUp} />
           <Route path="/login" component={Login} />
