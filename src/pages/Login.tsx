@@ -59,8 +59,15 @@ const Login = () => {
           isClosable: true,
         });
       }
-      if (err.code === 'auth/wrong-password')
-        setErrors({ ...errors, password: 'Incorrect password' });
+      if (
+        err.code === 'auth/invalid-email' ||
+        err.code === 'auth/wrong-password'
+      )
+        setErrors({
+          ...errors,
+          email: 'Invalid credentials',
+          password: 'Invalid credentials',
+        });
     }
     setLoading(false);
   };

@@ -2,8 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Box, Stack, Text } from '@chakra-ui/layout';
 import { Button } from '@chakra-ui/button';
+import { useAuth } from '../state/authState';
 
 const Navbar = () => {
+  const logout = useAuth((state) => state.logout);
+  const handleLogout = () => logout();
+
   return (
     <Box py="1" shadow="md">
       <Box
@@ -26,6 +30,14 @@ const Navbar = () => {
         </Text>
         <Stack direction={{ base: 'column', sm: 'row' }}>
           <>
+            <Button
+              onClick={handleLogout}
+              fontWeight="normal"
+              colorScheme="gray"
+              variant="ghost"
+            >
+              LogOut
+            </Button>
             <Button
               as={Link}
               fontWeight="normal"
