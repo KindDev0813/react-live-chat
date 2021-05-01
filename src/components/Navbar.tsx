@@ -16,7 +16,7 @@ const Navbar = () => {
         justifyContent="space-between"
       >
         <Text
-          fontSize="4xl"
+          fontSize="3xl"
           fontWeight="bold"
           color="teal.700"
           as={Link}
