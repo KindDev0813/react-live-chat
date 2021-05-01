@@ -12,7 +12,7 @@ import { useAuth, AuthUser } from './state/authState';
 
 const App: React.FC = () => {
   const loading = useAuth((state) => state.loading);
-  // const authUser = useAuth((state) => state.authUser);
+  const authUser = useAuth((state) => state.authUser);
   const fbUser = useAuth((state) => state.fbUser);
   const setFbUser = useAuth((state) => state.setFbUser);
   const setAuthUser = useAuth((state) => state.setAuthUser);
@@ -31,8 +31,7 @@ const App: React.FC = () => {
   useEffect(() => {
     async function fetchUser() {
       try {
-        if (!fbUser) return;
-        const doc = await db.collection('users').doc(fbUser.uid).get();
+        const doc = await db.collection('users').doc(fbUser?.uid).get();
         if (doc.exists) {
           const user = doc.data();
           const authUser: AuthUser = {
@@ -41,8 +40,10 @@ const App: React.FC = () => {
             email: user?.email ?? 'undefined',
           };
           setAuthUser(authUser);
-          setLoading(false);
+        } else {
+          setAuthUser(null);
         }
+        setLoading(false);
       } catch (e) {
         console.error(e);
         console.log(e.code);
@@ -52,14 +53,13 @@ const App: React.FC = () => {
     fetchUser();
   }, [fbUser, setAuthUser, setLoading]);
 
+  console.log(authUser);
+
   return (
     <ChakraProvider>
-      {loading ? (
-        <h1>Loading...</h1>
-      ) : (
+      {!loading && (
         <>
           <Navbar />
-          {console.log('inside')}
           <Switch>
             <Container maxW="container.xl" pt="2">
               <Route path="/" exact component={Home} />

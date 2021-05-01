@@ -22,7 +22,7 @@ type AuthState = {
   ) => Promise<firebase.auth.UserCredential>;
   logout: () => Promise<void>;
   setFbUser: (fbUser: any) => void;
-  setAuthUser: (authUser: AuthUser) => void;
+  setAuthUser: (authUser: AuthUser | null) => void;
   setLoading: (loading: boolean) => void;
 };
 

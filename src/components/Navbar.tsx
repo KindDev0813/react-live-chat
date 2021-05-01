@@ -1,12 +1,17 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { Box, Stack, Text } from '@chakra-ui/layout';
 import { Button } from '@chakra-ui/button';
 import { useAuth } from '../state/authState';
 
 const Navbar = () => {
+  const history = useHistory();
   const logout = useAuth((state) => state.logout);
-  const handleLogout = () => logout();
+  const authUser = useAuth((state) => state.authUser);
+  const handleLogout = () => {
+    logout();
+    history.push('/');
+  };
 
   return (
     <Box py="1" shadow="md">
@@ -29,34 +34,42 @@ const Navbar = () => {
           LOGO
         </Text>
         <Stack direction={{ base: 'column', sm: 'row' }}>
-          <>
-            <Button
-              onClick={handleLogout}
-              fontWeight="normal"
-              colorScheme="gray"
-              variant="ghost"
-            >
-              LogOut
-            </Button>
-            <Button
-              as={Link}
-              fontWeight="normal"
-              to="/login"
-              colorScheme="gray"
-              variant="ghost"
-            >
-              Login
-            </Button>
-            <Button
-              as={Link}
-              fontWeight="normal"
-              to="/signup"
-              colorScheme="gray"
-              variant="ghost"
-            >
-              SignUp
-            </Button>
-          </>
+          {authUser ? (
+            <>
+              <Button fontWeight="normal" colorScheme="gray" variant="ghost">
+                {authUser.username}
+              </Button>
+              <Button
+                onClick={handleLogout}
+                fontWeight="normal"
+                colorScheme="gray"
+                variant="ghost"
+              >
+                LogOut
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                as={Link}
+                fontWeight="normal"
+                to="/login"
+                colorScheme="gray"
+                variant="ghost"
+              >
+                Login
+              </Button>
+              <Button
+                as={Link}
+                fontWeight="normal"
+                to="/signup"
+                colorScheme="gray"
+                variant="ghost"
+              >
+                SignUp
+              </Button>
+            </>
+          )}
         </Stack>
       </Box>
     </Box>
