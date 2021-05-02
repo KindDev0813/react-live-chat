@@ -5,6 +5,7 @@ import firebase from 'firebase/app';
 interface RoomMessageProps {
   isAuthUser: boolean;
   text: string;
+  sender: string;
 }
 
 export type RoomMessageType = {
@@ -13,7 +14,11 @@ export type RoomMessageType = {
   sentAt: firebase.firestore.FieldValue;
 };
 
-const RoomMessage: React.FC<RoomMessageProps> = ({ isAuthUser, text }) => {
+const RoomMessage: React.FC<RoomMessageProps> = ({
+  isAuthUser,
+  text,
+  sender,
+}) => {
   return (
     <>
       {isAuthUser ? (
@@ -25,8 +30,17 @@ const RoomMessage: React.FC<RoomMessageProps> = ({ isAuthUser, text }) => {
           borderRadius="10px"
           borderTopRightRadius="0"
           my="1"
+          maxW="75%"
         >
-          <Text>{text}</Text>
+          <Text
+            fontWeight="medium"
+            fontStyle="italic"
+            fontSize="0.8rem"
+            textAlign="right"
+          >
+            {sender}
+          </Text>
+          <Text fontSize="medium">{text}</Text>
         </Box>
       ) : (
         <Box
@@ -37,7 +51,16 @@ const RoomMessage: React.FC<RoomMessageProps> = ({ isAuthUser, text }) => {
           mr="auto"
           my="1"
           bg="blackAlpha.100"
+          maxW="75%"
         >
+          <Text
+            fontWeight="medium"
+            fontStyle="italic"
+            fontSize="0.8rem"
+            textAlign="left"
+          >
+            {sender}
+          </Text>
           <Text>{text}</Text>
         </Box>
       )}

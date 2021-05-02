@@ -116,6 +116,7 @@ const RoomRight: React.FC<RoomRightProps> = ({ room }) => {
                 text={msg.message}
                 isAuthUser={authUser?.username === msg.sender}
                 key={Math.floor(Math.random() * 99999999)}
+                sender={msg.sender}
               />
             );
           })}
