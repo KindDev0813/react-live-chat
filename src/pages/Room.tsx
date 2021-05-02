@@ -4,8 +4,9 @@ import { useParams } from 'react-router-dom';
 
 import RoomLeft from '../components/room/RoomLeft';
 import { db } from '../firebase';
+import RoomRight from '../components/room/RoomRight';
 
-interface RoomType {
+export interface RoomType {
   admin: string;
   roomId: string;
   roomName: string;
@@ -46,6 +47,7 @@ const Room = () => {
         borderColor="blackAlpha.200"
       >
         <RoomLeft roomMates={room.roomMates} />
+        <RoomRight room={room} />
       </Flex>
     </Box>
   );
