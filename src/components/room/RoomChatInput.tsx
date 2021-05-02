@@ -4,7 +4,7 @@ import { Input, InputGroup, InputRightElement } from '@chakra-ui/input';
 import { Box } from '@chakra-ui/layout';
 import { FiSend } from 'react-icons/fi';
 
-import { db } from '../../firebase';
+import { db, timestamp } from '../../firebase';
 
 interface RoomChatInputProps {
   sender: string;
@@ -12,20 +12,21 @@ interface RoomChatInputProps {
 }
 
 const RoomChatInput: React.FC<RoomChatInputProps> = ({ sender, roomId }) => {
-  const [msg, setMsg] = useState('');
+  const [message, setMessage] = useState('');
 
   const sendMessage = async () => {
-    if (msg.trim() === '') return;
+    if (message.trim() === '') return;
     try {
       await db
         .collection('roomMessages')
         .doc(roomId)
         .collection('messages')
         .add({
-          msg,
+          message,
           sender,
+          sentAt: timestamp(),
         });
-      setMsg('');
+      setMessage('');
     } catch (err) {
       console.log('error in sending message');
     }
@@ -40,8 +41,8 @@ const RoomChatInput: React.FC<RoomChatInputProps> = ({ sender, roomId }) => {
             placeholder="Message..."
             py="1"
             size="md"
-            value={msg}
-            onChange={(e) => setMsg(e.target.value)}
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
             onKeyUp={(e) => {
               if (e.code === 'Enter') sendMessage();
             }}

@@ -1,22 +1,54 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { IconButton } from '@chakra-ui/button';
 import { Box, Text } from '@chakra-ui/layout';
 import { Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/menu';
 import { BsFillGearFill } from 'react-icons/bs';
 import { FaRegCopy } from 'react-icons/fa';
 import { BiExit } from 'react-icons/bi';
+import { AiFillDelete } from 'react-icons/ai';
 
 import { RoomType } from '../../pages/Room';
 import { useAuth } from '../../state/authState';
 import RoomChatInput from './RoomChatInput';
+import { useClipboard } from '@chakra-ui/hooks';
+import RoomMessage, { RoomMessageType } from './RoomMessage';
+import { db } from '../../firebase';
 
 interface RoomRightProps {
   room: RoomType;
 }
 
 const RoomRight: React.FC<RoomRightProps> = ({ room }) => {
-  const { roomName, roomId } = room;
+  const { roomName, roomId, admin: roomAdmin } = room;
   const authUser = useAuth((state) => state.authUser);
+  const { hasCopied, onCopy } = useClipboard(roomId);
+  const [messages, setMessages] = useState<RoomMessageType[]>([]);
+
+  useEffect(() => {
+    const unsub = db
+      .collection('roomMessages')
+      .doc(roomId)
+      .collection('messages')
+      .orderBy('sentAt', 'desc')
+      .onSnapshot((qs) => {
+        const messages: RoomMessageType[] = qs.docs
+          .map((doc) => doc.data())
+          .map((msgDoc) => ({
+            message: msgDoc.message,
+            sender: msgDoc.sender,
+            sentAt: msgDoc.sentAt,
+          }));
+
+        setMessages(messages);
+      });
+
+    return () => {
+      unsub();
+    };
+  }, [roomId, setMessages]);
+
+  const handleLeaveRoom = () => {};
+  const handleDeleteRoom = () => {};
 
   return (
     <Box h="100%" width="70%" borderRight="1px" borderColor="blackAlpha.200">
@@ -45,23 +77,27 @@ const RoomRight: React.FC<RoomRightProps> = ({ room }) => {
             }}
           />
           <MenuList>
-            {/* <MenuItem onClick={onCopy} icon={<FaRegCopy />}>
+            <MenuItem onClick={onCopy} icon={<FaRegCopy size={18} />}>
               {hasCopied ? 'Copied' : 'Copy Room Id'}
             </MenuItem>
-            {currentUser.displayName !== roomAdmin && (
-              <MenuItem onClick={handleLeaveRoom} icon={<BiExit />}>
-                Leave Room
-              </MenuItem>
-            )}
-            {currentUser.displayName === roomAdmin && (
+            {authUser?.username !== roomAdmin && (
               <MenuItem
                 color="red.500"
                 onClick={handleLeaveRoom}
-                icon={<AiFillDelete />}
+                icon={<BiExit size={18} />}
+              >
+                Leave Room
+              </MenuItem>
+            )}
+            {authUser?.username === roomAdmin && (
+              <MenuItem
+                color="red.500"
+                onClick={handleDeleteRoom}
+                icon={<AiFillDelete size={18} />}
               >
                 Delete Room
               </MenuItem>
-            )} */}
+            )}
           </MenuList>
         </Menu>
       </Box>
@@ -74,15 +110,15 @@ const RoomRight: React.FC<RoomRightProps> = ({ room }) => {
           display="flex"
           flexDirection="column-reverse"
         >
-          {/* {msgs.map((msg) => {
+          {messages.map((msg: any) => {
             return (
-              <Message
-                text={msg.msg}
+              <RoomMessage
+                text={msg.message}
                 isAuthUser={authUser?.username === msg.sender}
                 key={Math.floor(Math.random() * 99999999)}
               />
             );
-          })} */}
+          })}
         </Box>
         <RoomChatInput roomId={roomId} sender={authUser!.username} />
       </Box>
