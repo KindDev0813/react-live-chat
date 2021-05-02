@@ -6,6 +6,7 @@ export interface AuthUser {
   uid: string;
   username: string;
   email: string;
+  activeRooms: string[];
 }
 
 type AuthState = {

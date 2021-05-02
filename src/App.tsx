@@ -10,6 +10,7 @@ import DashBoard from './pages/DashBoard';
 import { auth, db } from './firebase';
 import { useAuth, AuthUser } from './state/authState';
 import PrivateRoute from './components/PrivateRoute';
+import Room from './pages/Room';
 
 const App: React.FC = () => {
   const loading = useAuth((state) => state.loading);
@@ -29,6 +30,7 @@ const App: React.FC = () => {
                 uid: user?.uid ?? 'undefined',
                 username: user?.username ?? 'undefined',
                 email: user?.email ?? 'undefined',
+                activeRooms: user?.activeRooms ?? 'undefined',
               };
               setAuthUser(authUser);
             } else {
@@ -65,6 +67,12 @@ const App: React.FC = () => {
               <PrivateRoute
                 path="/dashboard"
                 component={DashBoard}
+                isAuthenticated={authUser ? true : false}
+                authenticationPath="/login"
+              />
+              <PrivateRoute
+                path="/room/:roomId"
+                component={Room}
                 isAuthenticated={authUser ? true : false}
                 authenticationPath="/login"
               />
