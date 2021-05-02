@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '@chakra-ui/button';
 import {
   FormControl,
@@ -23,6 +23,12 @@ const Login = () => {
   const [errors, setErrors] = useState<LoginError>({});
   const [loading, setLoading] = useState(false);
   const login = useAuth((state) => state.login);
+
+  const authUser = useAuth((state) => state.authUser);
+
+  useEffect(() => {
+    if (authUser) history.push('/dashboard');
+  }, [history, authUser]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setData({ ...data, [e.target.name]: e.target.value });

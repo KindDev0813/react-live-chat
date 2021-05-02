@@ -29,7 +29,7 @@ const Navbar = () => {
           fontWeight="bold"
           color="teal.700"
           as={Link}
-          to="/"
+          to={authUser ? '/dashboard' : '/'}
         >
           LOGO
         </Text>

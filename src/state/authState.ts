@@ -10,7 +10,6 @@ export interface AuthUser {
 
 type AuthState = {
   authUser: AuthUser | null;
-  fbUser: any;
   loading: boolean;
   signup: (
     email: string,
@@ -21,7 +20,6 @@ type AuthState = {
     password: string
   ) => Promise<firebase.auth.UserCredential>;
   logout: () => Promise<void>;
-  setFbUser: (fbUser: any) => void;
   setAuthUser: (authUser: AuthUser | null) => void;
   setLoading: (loading: boolean) => void;
 };
@@ -29,12 +27,10 @@ type AuthState = {
 export const useAuth = create<AuthState>((set) => ({
   authUser: null,
   loading: true,
-  fbUser: null,
   signup: (email, password) =>
     auth.createUserWithEmailAndPassword(email, password),
   login: (email, password) => auth.signInWithEmailAndPassword(email, password),
   logout: () => auth.signOut(),
-  setFbUser: (fbUser) => set((state) => ({ ...state, fbUser })),
   setAuthUser: (authUser) => set((state) => ({ ...state, authUser })),
   setLoading: (loading) => set((state) => ({ ...state, loading })),
 }));
