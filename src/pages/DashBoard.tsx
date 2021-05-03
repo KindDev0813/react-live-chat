@@ -1,15 +1,12 @@
 import { useDisclosure } from '@chakra-ui/hooks';
-import { Box, Flex, Text } from '@chakra-ui/layout';
-import { useEffect, useState } from 'react';
+import { Box, Flex } from '@chakra-ui/layout';
 import { FaPlus } from 'react-icons/fa';
 import { ImEnter } from 'react-icons/im';
-import { useHistory } from 'react-router';
 //
 import CreateRoomModel from '../components/dashboard/CreateRoomModel';
 import DashBoardCard from '../components/dashboard/DashBoardCard';
+import DashBoardRooms from '../components/dashboard/DashBoardRooms';
 import JoinRoomModel from '../components/dashboard/JoinRoomModel';
-import { db } from '../firebase';
-import { useAuth } from '../state/authState';
 
 const DashBoard = () => {
   const {
@@ -22,18 +19,6 @@ const DashBoard = () => {
     onOpen: onOpen2,
     onClose: onClose2,
   } = useDisclosure();
-  const history = useHistory();
-  const authUser = useAuth((state) => state.authUser);
-  const [roomIds, setRoomIds] = useState<string[]>([]);
-
-  useEffect(() => {
-    (async () => {
-      const userDoc = await db.collection('users').doc(authUser?.uid).get();
-      const userData = userDoc.data();
-      const roomIds = userData && userData.activeRooms;
-      setRoomIds(roomIds);
-    })();
-  }, [authUser?.uid]);
 
   return (
     <Box p="5" pt="0">
@@ -59,18 +44,7 @@ const DashBoard = () => {
         <JoinRoomModel isOpen={isOpen2} onClose={onClose2} />
       </Flex>
 
-      <Box>
-        {roomIds.map((id) => (
-          <Text
-            key={id}
-            onClick={() => {
-              history.push(`/room/${id}`);
-            }}
-          >
-            {id}
-          </Text>
-        ))}
-      </Box>
+      <DashBoardRooms />
     </Box>
   );
 };
