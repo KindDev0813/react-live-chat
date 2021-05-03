@@ -1,14 +1,14 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useHistory } from 'react-router';
-import { useAuth } from '../state/authState';
+import { auth } from '../firebase';
 
 const Home = () => {
   const history = useHistory();
-  const authUser = useAuth((state) => state.authUser);
 
   useEffect(() => {
-    if (authUser) history.push('/dashboard');
-  }, [history, authUser]);
+    const user = auth.currentUser;
+    if (user) history.push('/dashboard');
+  }, [history]);
 
   return <div>this is Home page</div>;
 };

@@ -10,6 +10,7 @@ import { Box, Text } from '@chakra-ui/layout';
 import { useAuth } from '../state/authState';
 import { useHistory } from 'react-router-dom';
 import { useToast } from '@chakra-ui/toast';
+import { auth } from '../firebase';
 
 interface LoginError {
   email?: string;
@@ -19,16 +20,18 @@ interface LoginError {
 const Login = () => {
   const toast = useToast();
   const history = useHistory();
-  const [data, setData] = useState({ email: '', password: '' });
+  const [data, setData] = useState({
+    email: 'sairaj2119@gmail.com',
+    password: 'aunzbedi',
+  });
   const [errors, setErrors] = useState<LoginError>({});
   const [loading, setLoading] = useState(false);
   const login = useAuth((state) => state.login);
 
-  const authUser = useAuth((state) => state.authUser);
-
   useEffect(() => {
-    if (authUser) history.push('/dashboard');
-  }, [history, authUser]);
+    const user = auth.currentUser;
+    if (user) history.push('/dashboard');
+  }, [history]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setData({ ...data, [e.target.name]: e.target.value });
@@ -51,7 +54,9 @@ const Login = () => {
         duration: 3000,
         isClosable: true,
       });
-      history.push('/dashboard');
+      // setTimeout(() => {
+      //   history.push('/dashboard');
+      // }, 500);
     } catch (err) {
       console.log(err.code);
       console.log(err.message);

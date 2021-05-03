@@ -8,7 +8,7 @@ import {
 import { Input } from '@chakra-ui/input';
 import { Box, Text } from '@chakra-ui/layout';
 import { validateInputs } from '../utils/validators';
-import { db } from '../firebase';
+import { auth, db } from '../firebase';
 import { useAuth } from '../state/authState';
 import { useToast } from '@chakra-ui/toast';
 import { useHistory } from 'react-router-dom';
@@ -27,11 +27,11 @@ const SignUp = () => {
   const [errors, setErrors] = useState<SignUpError>({});
   const [loading, setLoading] = useState(false);
   const signup = useAuth((state) => state.signup);
-  const authUser = useAuth((state) => state.authUser);
 
   useEffect(() => {
-    if (authUser) history.push('/dashboard');
-  }, [history, authUser]);
+    const user = auth.currentUser;
+    if (user) history.push('/dashboard');
+  }, [history]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setData({ ...data, [e.target.name]: e.target.value });

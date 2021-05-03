@@ -9,6 +9,7 @@ import CreateRoomModel from '../components/dashboard/CreateRoomModel';
 import DashBoardCard from '../components/dashboard/DashBoardCard';
 import DashBoardRooms from '../components/dashboard/DashBoardRooms';
 import JoinRoomModel from '../components/dashboard/JoinRoomModel';
+import { auth } from '../firebase';
 import { useAuth } from '../state/authState';
 
 const DashBoard = () => {
@@ -27,7 +28,8 @@ const DashBoard = () => {
   console.log(authUser);
 
   useEffect(() => {
-    if (!authUser) history.push('/');
+    const user = auth.currentUser;
+    if (!user) history.push('/');
   }, [authUser, history]);
 
   return (

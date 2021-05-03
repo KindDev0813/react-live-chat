@@ -4,7 +4,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { useToast } from '@chakra-ui/toast';
 
 import RoomLeft from '../components/room/RoomLeft';
-import { db } from '../firebase';
+import { auth, db } from '../firebase';
 import RoomRight from '../components/room/RoomRight';
 import { useAuth } from '../state/authState';
 
@@ -23,7 +23,8 @@ const Room = () => {
   const [room, setRoom] = useState<RoomType | null>(null);
 
   useEffect(() => {
-    if (!authUser) return history.push('/');
+    const user = auth.currentUser;
+    if (!user) return history.push('/');
     const fetchRoom = async () => {
       const unsub = db
         .collection('rooms')
