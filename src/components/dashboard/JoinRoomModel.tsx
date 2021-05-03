@@ -19,7 +19,7 @@ import {
 } from '@chakra-ui/modal';
 import { useToast } from '@chakra-ui/toast';
 import { useState } from 'react';
-// import { useHistory } from 'react-router';
+import { useHistory } from 'react-router';
 //
 import { db } from '../../firebase';
 import { useAuth } from '../../state/authState';
@@ -31,7 +31,7 @@ interface ModalProps {
 
 const JoinRoomModel: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   const toast = useToast();
-  // const history = useHistory();
+  const history = useHistory();
   const authUser = useAuth((state) => state.authUser);
   const [roomId, setRoomId] = useState('');
   const [loading, setLoading] = useState(false);
@@ -63,13 +63,13 @@ const JoinRoomModel: React.FC<ModalProps> = ({ isOpen, onClose }) => {
       if (isUserThere) {
         onClose();
         setLoading((loading) => !loading);
+        history.push(`/room/${roomId}`);
         return toast({
           title: `Already in room ${roomData.roomName}`,
           status: 'error',
           duration: 3000,
           isClosable: true,
         });
-        // redirect here to that room
       }
       await room.update({
         roomMates: firebase.firestore.FieldValue.arrayUnion({
@@ -80,6 +80,13 @@ const JoinRoomModel: React.FC<ModalProps> = ({ isOpen, onClose }) => {
       await userRef.update({
         activeRooms: firebase.firestore.FieldValue.arrayUnion(room.id),
       });
+      toast({
+        title: `Joined room ${roomData.roomName}`,
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+      history.push(`/room/${roomId}`);
       setRoomId('');
     } catch (err) {
       console.log(err.code);

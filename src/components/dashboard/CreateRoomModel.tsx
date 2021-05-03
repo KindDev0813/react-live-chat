@@ -18,7 +18,7 @@ import {
   ModalOverlay,
 } from '@chakra-ui/modal';
 import { useToast } from '@chakra-ui/toast';
-// import { useHistory } from 'react-router';
+import { useHistory } from 'react-router';
 import { db } from '../../firebase';
 import { useAuth } from '../../state/authState';
 
@@ -28,7 +28,7 @@ interface ModalProps {
 }
 
 const CreateRoomModel: React.FC<ModalProps> = ({ isOpen, onClose }) => {
-  // const history = useHistory();
+  const history = useHistory();
   const toast = useToast();
   const authUser = useAuth((state) => state.authUser);
   const [data, setData] = useState({ roomName: '' });
@@ -61,7 +61,7 @@ const CreateRoomModel: React.FC<ModalProps> = ({ isOpen, onClose }) => {
       });
       setData({ roomName: '' });
       console.log('will push to room page');
-      // history.push(`/room/${room.id}`);
+      history.push(`/room/${room.id}`);
     } catch (err) {
       console.log('error in creating a room');
     }
