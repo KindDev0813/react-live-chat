@@ -23,6 +23,7 @@ import { useHistory } from 'react-router';
 //
 import { db } from '../../firebase';
 import { useAuth } from '../../state/authState';
+import { getMaxKey } from '../../utils/helpers';
 
 interface ModalProps {
   isOpen: boolean;
@@ -80,6 +81,29 @@ const JoinRoomModel: React.FC<ModalProps> = ({ isOpen, onClose }) => {
       await userRef.update({
         activeRooms: firebase.firestore.FieldValue.arrayUnion(room.id),
       });
+      //! used for showing realtime data on dashboard of the user
+      const res = await db.collection('dashrooms').doc(authUser?.uid).get();
+      const resData = res.data();
+      if (!resData) {
+        await db
+          .collection('dashrooms')
+          .doc(authUser?.uid)
+          .set({
+            1: {
+              roomId: room.id,
+              ...roomData,
+            },
+          });
+      } else {
+        const max = getMaxKey(resData);
+        let obj: any = {};
+        obj[max + 1] = {
+          roomId: room.id,
+          ...roomData,
+        };
+        await db.collection('dashrooms').doc(authUser?.uid).update(obj);
+      }
+      // !
       toast({
         title: `Joined room ${roomData.roomName}`,
         status: 'success',

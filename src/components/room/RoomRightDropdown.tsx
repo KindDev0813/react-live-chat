@@ -11,6 +11,7 @@ import firebase from 'firebase/app';
 import { useAuth } from '../../state/authState';
 import { db } from '../../firebase';
 import { useHistory } from 'react-router';
+import { getKeyOfRoom } from '../../utils/helpers';
 
 interface RoomRightDropdownProps {
   roomId: string;
@@ -28,16 +29,29 @@ const RoomRightDropdown: React.FC<RoomRightDropdownProps> = ({
   const handleLeaveRoom = async () => {
     const userRef = db.collection('users').doc(authUser?.uid);
     const room = await db.collection('rooms').doc(roomId);
-    await room.update({
-      roomMates: firebase.firestore.FieldValue.arrayRemove({
-        uid: authUser?.uid,
-        username: authUser?.username,
-      }),
-    });
-    await userRef.update({
-      activeRooms: firebase.firestore.FieldValue.arrayRemove(room.id),
-    });
-    history.replace('/dashboard');
+    try {
+      await room.update({
+        roomMates: firebase.firestore.FieldValue.arrayRemove({
+          uid: authUser?.uid,
+          username: authUser?.username,
+        }),
+      });
+      await userRef.update({
+        activeRooms: firebase.firestore.FieldValue.arrayRemove(room.id),
+      });
+      // removing from dashboard rooms
+      const res = await db.collection('dashrooms').doc(authUser?.uid).get();
+      const resData = res.data();
+      const key: number = getKeyOfRoom(resData, roomId);
+      const obj: any = {};
+      obj[key] = firebase.firestore.FieldValue.delete();
+      await db.collection('dashrooms').doc(authUser?.uid).update(obj);
+    } catch (err) {
+      console.log(err.code);
+      console.log(err.message);
+    }
+
+    history.push('/dashboard');
   };
   const handleDeleteRoom = () => {};
 
