@@ -77,7 +77,7 @@ const JoinRoomModel: React.FC<ModalProps> = ({ isOpen, onClose }) => {
           username: authUser?.username,
         }),
       });
-      userRef.update({
+      await userRef.update({
         activeRooms: firebase.firestore.FieldValue.arrayUnion(room.id),
       });
       setRoomId('');
