@@ -9,12 +9,10 @@ import Navbar from './components/Navbar';
 import DashBoard from './pages/DashBoard';
 import { auth, db } from './firebase';
 import { useAuth, AuthUser } from './state/authState';
-import PrivateRoute from './components/PrivateRoute';
 import Room from './pages/Room';
 
 const App: React.FC = () => {
   const loading = useAuth((state) => state.loading);
-  const authUser = useAuth((state) => state.authUser);
   const setAuthUser = useAuth((state) => state.setAuthUser);
   const setLoading = useAuth((state) => state.setLoading);
 
@@ -52,8 +50,6 @@ const App: React.FC = () => {
     };
   }, [setAuthUser, setLoading]);
 
-  console.log(authUser);
-
   return (
     <ChakraProvider>
       {!loading && (
@@ -64,18 +60,8 @@ const App: React.FC = () => {
               <Route path="/" exact component={Home} />
               <Route path="/signup" component={SignUp} />
               <Route path="/login" exact component={Login} />
-              <PrivateRoute
-                path="/dashboard"
-                component={DashBoard}
-                isAuthenticated={authUser ? true : false}
-                authenticationPath="/login"
-              />
-              <PrivateRoute
-                path="/room/:roomId"
-                component={Room}
-                isAuthenticated={authUser ? true : false}
-                authenticationPath="/login"
-              />
+              <Route path="/dashboard" component={DashBoard} />
+              <Route path="/room/:roomId" component={Room} />
             </Container>
           </Switch>
         </>

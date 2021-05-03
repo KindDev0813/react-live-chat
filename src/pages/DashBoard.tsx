@@ -1,12 +1,15 @@
 import { useDisclosure } from '@chakra-ui/hooks';
 import { Box, Flex } from '@chakra-ui/layout';
+import { useEffect } from 'react';
 import { FaPlus } from 'react-icons/fa';
 import { ImEnter } from 'react-icons/im';
+import { useHistory } from 'react-router';
 //
 import CreateRoomModel from '../components/dashboard/CreateRoomModel';
 import DashBoardCard from '../components/dashboard/DashBoardCard';
 import DashBoardRooms from '../components/dashboard/DashBoardRooms';
 import JoinRoomModel from '../components/dashboard/JoinRoomModel';
+import { useAuth } from '../state/authState';
 
 const DashBoard = () => {
   const {
@@ -19,6 +22,13 @@ const DashBoard = () => {
     onOpen: onOpen2,
     onClose: onClose2,
   } = useDisclosure();
+  const authUser = useAuth((state) => state.authUser);
+  const history = useHistory();
+  console.log(authUser);
+
+  useEffect(() => {
+    if (!authUser) history.push('/');
+  }, [authUser, history]);
 
   return (
     <Box p="5" pt="0">

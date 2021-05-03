@@ -23,6 +23,7 @@ const Room = () => {
   const [room, setRoom] = useState<RoomType | null>(null);
 
   useEffect(() => {
+    if (!authUser) return history.push('/');
     const fetchRoom = async () => {
       const unsub = db
         .collection('rooms')
@@ -50,7 +51,7 @@ const Room = () => {
       return unsub;
     };
     fetchRoom();
-  }, [params.roomId, history, authUser?.uid, toast]);
+  }, [params.roomId, history, authUser?.uid, toast, authUser]);
 
   if (!room) return <h1>Loading...</h1>;
 
