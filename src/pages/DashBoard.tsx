@@ -25,7 +25,6 @@ const DashBoard = () => {
   } = useDisclosure();
   const authUser = useAuth((state) => state.authUser);
   const history = useHistory();
-  console.log(authUser);
 
   useEffect(() => {
     const user = auth.currentUser;

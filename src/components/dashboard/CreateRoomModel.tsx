@@ -60,6 +60,7 @@ const CreateRoomModel: React.FC<ModalProps> = ({ isOpen, onClose }) => {
       //! used for showing realtime data on dashboard of the user
       const res = await db.collection('dashrooms').doc(authUser?.uid).get();
       const resData = res.data();
+
       if (!resData) {
         await db
           .collection('dashrooms')
@@ -90,6 +91,8 @@ const CreateRoomModel: React.FC<ModalProps> = ({ isOpen, onClose }) => {
       history.push(`/room/${room.id}`);
     } catch (err) {
       console.log('error in creating a room');
+      console.log(err.code);
+      console.log(err.message);
     }
 
     setLoading((loading) => !loading);
