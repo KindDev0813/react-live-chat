@@ -21,6 +21,7 @@ import { useToast } from '@chakra-ui/toast';
 import { useHistory } from 'react-router';
 import { db } from '../../firebase';
 import { useAuth } from '../../state/authState';
+import { getMaxKey } from '../../utils/helpers';
 
 interface ModalProps {
   isOpen: boolean;
@@ -47,12 +48,38 @@ const CreateRoomModel: React.FC<ModalProps> = ({ isOpen, onClose }) => {
       setLoading((loading) => !loading);
       const room = await db.collection('rooms').add(roomData);
       await db.collection('rooms').doc(room.id).update({ roomId: room.id });
+
+      //! used for validating users before entering any room
       await db
         .collection('users')
         .doc(authUser?.uid)
         .update({
           activeRooms: firebase.firestore.FieldValue.arrayUnion(room.id),
         });
+
+      //! used for showing realtime data on dashboard of the user
+      const res = await db.collection('dashrooms').doc(authUser?.uid).get();
+      const resData = res.data();
+      if (!resData) {
+        await db
+          .collection('dashrooms')
+          .doc(authUser?.uid)
+          .set({
+            1: {
+              roomId: room.id,
+              ...roomData,
+            },
+          });
+      } else {
+        const max = getMaxKey(resData);
+        let obj: any = {};
+        obj[max + 1] = {
+          roomId: room.id,
+          ...roomData,
+        };
+        await db.collection('dashrooms').doc(authUser?.uid).update(obj);
+      }
+
       toast({
         title: `Joined room ${data.roomName}`,
         status: 'success',
@@ -60,7 +87,6 @@ const CreateRoomModel: React.FC<ModalProps> = ({ isOpen, onClose }) => {
         isClosable: true,
       });
       setData({ roomName: '' });
-      console.log('will push to room page');
       history.push(`/room/${room.id}`);
     } catch (err) {
       console.log('error in creating a room');

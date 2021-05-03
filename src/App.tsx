@@ -63,7 +63,7 @@ const App: React.FC = () => {
             <Container maxW="container.xl" pt="2">
               <Route path="/" exact component={Home} />
               <Route path="/signup" component={SignUp} />
-              <Route path="/login" component={Login} />
+              <Route path="/login" exact component={Login} />
               <PrivateRoute
                 path="/dashboard"
                 component={DashBoard}
