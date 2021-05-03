@@ -15,7 +15,6 @@ const DashBoardRooms = () => {
       const rooms: RoomType[] = [];
       await roomIds!.reduce(async (promise, file) => {
         await promise;
-        console.log('running use effect');
         const roomDoc = await db.collection('rooms').doc(file).get();
         const roomData = roomDoc.data();
         if (!roomData) {

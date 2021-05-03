@@ -37,7 +37,7 @@ const RoomRightDropdown: React.FC<RoomRightDropdownProps> = ({
     await userRef.update({
       activeRooms: firebase.firestore.FieldValue.arrayRemove(room.id),
     });
-    history.push('/dashboard');
+    history.replace('/dashboard');
   };
   const handleDeleteRoom = () => {};
 
