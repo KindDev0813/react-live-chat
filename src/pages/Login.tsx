@@ -91,7 +91,6 @@ const Login = () => {
         margin="auto"
         borderColor="gray.300"
         borderRadius="xl"
-        shadow="lg"
         py="0"
         px="5"
         pb="4"
