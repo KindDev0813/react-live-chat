@@ -13,7 +13,7 @@ interface RoomRightProps {
 }
 
 const RoomRight: React.FC<RoomRightProps> = ({ room }) => {
-  const { roomName, roomId, admin: roomAdmin } = room;
+  const { roomName, roomId, admin: roomAdmin, roomMates } = room;
   const authUser = useAuth((state) => state.authUser);
   const [messages, setMessages] = useState<RoomMessageType[]>([]);
 
@@ -54,8 +54,8 @@ const RoomRight: React.FC<RoomRightProps> = ({ room }) => {
       >
         <Flex flexDirection="column" justifyContent="center">
           <Text fontSize="lg">{roomName}</Text>
-          <Text fontSize="small" textColor="teal.400">
-            created by {roomAdmin}
+          <Text fontSize="small" textColor="teal.500">
+            {roomMates.length} Online
           </Text>
         </Flex>
         <RoomRightDropdown roomAdmin={roomAdmin} roomId={roomId} />

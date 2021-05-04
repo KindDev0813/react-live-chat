@@ -86,7 +86,7 @@ const Room = () => {
         borderColor="blackAlpha.300"
         shadow="lg"
       >
-        <RoomLeft roomMates={room.roomMates} />
+        <RoomLeft roomMates={room.roomMates} roomAdmin={room.admin} />
         <RoomRight room={room} />
       </Flex>
     </Box>
