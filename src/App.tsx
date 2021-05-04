@@ -56,8 +56,8 @@ const App: React.FC = () => {
         <>
           <Navbar />
           <Switch>
+            <Route path="/" exact component={Home} />
             <Container maxW="container.xl" pt="2">
-              <Route path="/" exact component={Home} />
               <Route path="/signup" component={SignUp} />
               <Route path="/login" exact component={Login} />
               <Route path="/dashboard" component={DashBoard} />

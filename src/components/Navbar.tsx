@@ -45,7 +45,7 @@ const Navbar = () => {
                 colorScheme="gray"
                 variant="ghost"
               >
-                LogOut
+                Logout
               </Button>
             </>
           ) : (

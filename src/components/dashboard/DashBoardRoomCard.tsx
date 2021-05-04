@@ -25,6 +25,8 @@ const DashBoardRoomCard: React.FC<DashBoardRoomCardProps> = ({ room }) => {
       _hover={{ background: 'blackAlpha.100' }}
       transition="all 0.35s ease"
       onClick={handleClick}
+      borderBottom="1px"
+      borderColor="blackAlpha.200"
     >
       <Flex px="5" justifyContent="space-between" alignItems="center" w="100%">
         <Text fontSize="lg">{roomName}</Text>

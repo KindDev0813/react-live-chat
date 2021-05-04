@@ -8,7 +8,7 @@ import {
 import { Input, InputGroup, InputRightElement } from '@chakra-ui/input';
 import { Box, Text } from '@chakra-ui/layout';
 import { useAuth } from '../state/authState';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { useToast } from '@chakra-ui/toast';
 import { auth } from '../firebase';
 
@@ -21,8 +21,8 @@ const Login = () => {
   const toast = useToast();
   const history = useHistory();
   const [data, setData] = useState({
-    email: 'sairaj2119@gmail.com',
-    password: 'aunzbedi',
+    email: '',
+    password: '',
   });
   const [errors, setErrors] = useState<LoginError>({});
   const [loading, setLoading] = useState(false);
@@ -58,9 +58,6 @@ const Login = () => {
         duration: 3000,
         isClosable: true,
       });
-      // setTimeout(() => {
-      //   history.push('/dashboard');
-      // }, 500);
     } catch (err) {
       console.log(err.code);
       console.log(err.message);
@@ -87,77 +84,87 @@ const Login = () => {
     setLoading(false);
   };
   return (
-    <Box
-      w={{ base: '100%', md: '40%' }}
-      border="1px"
-      margin="auto"
-      borderColor="gray.300"
-      borderRadius="xl"
-      shadow="lg"
-      py="0"
-      px="5"
-      pb="4"
-      pt="2"
-      style={{ marginTop: '2rem' }}
-    >
-      <Text
-        fontSize="4xl"
-        color="teal.600"
-        fontWeight="bold"
-        textAlign="center"
+    <>
+      <Box
+        w={{ base: '100%', md: '40%' }}
+        border="1px"
+        margin="auto"
+        borderColor="gray.300"
+        borderRadius="xl"
+        shadow="lg"
+        py="0"
+        px="5"
+        pb="4"
+        pt="2"
+        style={{ marginTop: '2rem' }}
       >
-        LogIn
-      </Text>
+        <Text
+          fontSize="4xl"
+          color="teal.600"
+          fontWeight="bold"
+          textAlign="center"
+        >
+          LogIn
+        </Text>
 
-      <FormControl
-        id="email"
-        my="2"
-        isRequired
-        isInvalid={errors.email ? true : false}
-      >
-        <FormLabel>Email address</FormLabel>
-        <Input
-          type="email"
-          name="email"
-          value={data.email}
-          onChange={handleChange}
-        />
-        <FormErrorMessage>{errors.email}</FormErrorMessage>
-      </FormControl>
-
-      <FormControl
-        id="password"
-        my="2"
-        isRequired
-        isInvalid={errors.password ? true : false}
-      >
-        <FormLabel>Password</FormLabel>
-        <InputGroup>
+        <FormControl
+          id="email"
+          my="2"
+          isRequired
+          isInvalid={errors.email ? true : false}
+        >
+          <FormLabel>Email address</FormLabel>
           <Input
-            type={show ? 'text' : 'password'}
-            name="password"
-            value={data.password}
+            type="email"
+            name="email"
+            value={data.email}
             onChange={handleChange}
           />
-          <InputRightElement width="4.5rem">
-            <Button h="1.75rem" size="sm" onClick={handleClick}>
-              {show ? 'Hide' : 'Show'}
-            </Button>
-          </InputRightElement>
-        </InputGroup>
-        <FormErrorMessage>{errors.password}</FormErrorMessage>
-      </FormControl>
+          <FormErrorMessage>{errors.email}</FormErrorMessage>
+        </FormControl>
 
-      <Button
-        colorScheme="teal"
-        onClick={handleLogin}
-        isLoading={loading}
-        loadingText="Submiting.."
-        my="3"
-      >
-        Submit
-      </Button>
-    </Box>
+        <FormControl
+          id="password"
+          my="2"
+          isRequired
+          isInvalid={errors.password ? true : false}
+        >
+          <FormLabel>Password</FormLabel>
+          <InputGroup>
+            <Input
+              type={show ? 'text' : 'password'}
+              name="password"
+              value={data.password}
+              onChange={handleChange}
+            />
+            <InputRightElement width="4.5rem">
+              <Button h="1.75rem" size="sm" onClick={handleClick}>
+                {show ? 'Hide' : 'Show'}
+              </Button>
+            </InputRightElement>
+          </InputGroup>
+          <FormErrorMessage>{errors.password}</FormErrorMessage>
+        </FormControl>
+
+        <Button
+          colorScheme="teal"
+          onClick={handleLogin}
+          isLoading={loading}
+          loadingText="Submiting.."
+          my="3"
+        >
+          Submit
+        </Button>
+      </Box>
+      <Box textAlign="center" mt="3">
+        <Text>
+          Don't have an account?{' '}
+          <Button colorScheme="teal" variant="link" as={Link} to="/signup">
+            SignUp here
+          </Button>
+        </Text>
+      </Box>
+    </>
   );
 };
 
