@@ -1,4 +1,5 @@
-import { Box, Text } from '@chakra-ui/layout';
+import { Box, Stack, Text } from '@chakra-ui/layout';
+import { Skeleton } from '@chakra-ui/skeleton';
 import { useEffect, useState } from 'react';
 import { db } from '../../firebase';
 import { RoomType } from '../../pages/Room';
@@ -19,7 +20,18 @@ const DashBoardRooms = () => {
       });
   }, [authUser?.uid]);
 
-  if (!rooms) return <h1>Loading..</h1>;
+  if (!rooms) {
+    return (
+      <Box width="90%" mx="auto">
+        <Skeleton height="30px" width="25%" mb="5" />
+        <Stack>
+          <Skeleton height="30px" startColor="gray.100" endColor="gray.300" />
+          <Skeleton height="30px" startColor="gray.100" endColor="gray.300" />
+          <Skeleton height="30px" startColor="gray.100" endColor="gray.300" />
+        </Stack>
+      </Box>
+    );
+  }
 
   return (
     <Box width="90%" margin="auto">

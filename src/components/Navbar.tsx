@@ -14,7 +14,7 @@ const Navbar = () => {
   };
 
   return (
-    <Box py="1">
+    <Box py="1" shadow="md">
       <Box
         w="90%"
         h="100%"
@@ -31,7 +31,7 @@ const Navbar = () => {
           as={Link}
           to={authUser ? '/dashboard' : '/'}
         >
-          LOGO
+          Room Chat
         </Text>
         <Stack direction={{ base: 'column', sm: 'row' }}>
           {authUser ? (

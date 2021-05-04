@@ -5,7 +5,7 @@ import {
   FormErrorMessage,
   FormLabel,
 } from '@chakra-ui/form-control';
-import { Input } from '@chakra-ui/input';
+import { Input, InputGroup, InputRightElement } from '@chakra-ui/input';
 import { Box, Text } from '@chakra-ui/layout';
 import { useAuth } from '../state/authState';
 import { useHistory } from 'react-router-dom';
@@ -26,6 +26,8 @@ const Login = () => {
   });
   const [errors, setErrors] = useState<LoginError>({});
   const [loading, setLoading] = useState(false);
+  const [show, setShow] = useState(false);
+  const handleClick = () => setShow(!show);
   const login = useAuth((state) => state.login);
 
   useEffect(() => {
@@ -130,12 +132,19 @@ const Login = () => {
         isInvalid={errors.password ? true : false}
       >
         <FormLabel>Password</FormLabel>
-        <Input
-          type="password"
-          name="password"
-          value={data.password}
-          onChange={handleChange}
-        />
+        <InputGroup>
+          <Input
+            type={show ? 'text' : 'password'}
+            name="password"
+            value={data.password}
+            onChange={handleChange}
+          />
+          <InputRightElement width="4.5rem">
+            <Button h="1.75rem" size="sm" onClick={handleClick}>
+              {show ? 'Hide' : 'Show'}
+            </Button>
+          </InputRightElement>
+        </InputGroup>
         <FormErrorMessage>{errors.password}</FormErrorMessage>
       </FormControl>
 

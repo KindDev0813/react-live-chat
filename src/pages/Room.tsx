@@ -7,6 +7,7 @@ import RoomLeft from '../components/room/RoomLeft';
 import { auth, db } from '../firebase';
 import RoomRight from '../components/room/RoomRight';
 import { useAuth } from '../state/authState';
+import { Skeleton } from '@chakra-ui/skeleton';
 
 export interface RoomType {
   admin: string;
@@ -54,7 +55,25 @@ const Room = () => {
     fetchRoom();
   }, [params.roomId, history, authUser?.uid, toast, authUser]);
 
-  if (!room) return <h1>Loading...</h1>;
+  if (!room) {
+    return (
+      <Box h="90vh" display="flex" width="90%" mx="auto">
+        <Skeleton
+          height="100%"
+          width="28%"
+          startColor="gray.100"
+          endColor="gray.300"
+        />
+        <Skeleton
+          height="100%"
+          width="70%"
+          marginLeft="auto"
+          startColor="gray.100"
+          endColor="gray.300"
+        />
+      </Box>
+    );
+  }
 
   return (
     <Box h="90vh" display="flex" alignItems="center">

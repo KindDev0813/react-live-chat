@@ -5,7 +5,7 @@ import {
   FormErrorMessage,
   FormLabel,
 } from '@chakra-ui/form-control';
-import { Input } from '@chakra-ui/input';
+import { Input, InputGroup, InputRightElement } from '@chakra-ui/input';
 import { Box, Text } from '@chakra-ui/layout';
 import { validateInputs } from '../utils/validators';
 import { auth, db } from '../firebase';
@@ -26,6 +26,7 @@ const SignUp = () => {
   const [data, setData] = useState({ username: '', email: '', password: '' });
   const [errors, setErrors] = useState<SignUpError>({});
   const [loading, setLoading] = useState(false);
+  const [show, setShow] = useState(false);
   const signup = useAuth((state) => state.signup);
 
   useEffect(() => {
@@ -33,6 +34,7 @@ const SignUp = () => {
     if (user) history.push('/dashboard');
   }, [history]);
 
+  const handleClick = () => setShow(!show);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
@@ -145,12 +147,19 @@ const SignUp = () => {
         isInvalid={errors.password ? true : false}
       >
         <FormLabel>Password</FormLabel>
-        <Input
-          type="password"
-          name="password"
-          value={data.password}
-          onChange={handleChange}
-        />
+        <InputGroup>
+          <Input
+            type={show ? 'text' : 'password'}
+            name="password"
+            value={data.password}
+            onChange={handleChange}
+          />
+          <InputRightElement width="4.5rem">
+            <Button h="1.75rem" size="sm" onClick={handleClick}>
+              {show ? 'Hide' : 'Show'}
+            </Button>
+          </InputRightElement>
+        </InputGroup>
         <FormErrorMessage>{errors.password}</FormErrorMessage>
       </FormControl>
 
