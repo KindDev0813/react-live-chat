@@ -40,6 +40,16 @@ const Home = () => {
           >
             Firebase
           </a>
+        </Button>
+        ,{' '}
+        <Button colorScheme="teal" variant="link" fontSize="xl">
+          <a
+            href="https://github.com/pmndrs/zustand"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Zustand
+          </a>
         </Button>{' '}
         and{' '}
         <Button colorScheme="teal" variant="link" fontSize="xl">

@@ -81,9 +81,6 @@ const RoomRightDropdown: React.FC<RoomRightDropdownProps> = ({
       //! reduce async function
       await roomMates.reduce(
         async (promise: any, user: { uid: string; username: string }) => {
-          // This line will wait for the last async function to finish.
-          // The first iteration uses an already resolved Promise
-          // so, it will immediately continue.
           await promise;
           const userRef = db.collection('users').doc(user.uid);
           await userRef.update({
