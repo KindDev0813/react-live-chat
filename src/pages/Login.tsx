@@ -29,8 +29,10 @@ const Login = () => {
   const login = useAuth((state) => state.login);
 
   useEffect(() => {
-    const user = auth.currentUser;
-    if (user) history.push('/dashboard');
+    const unsub = auth.onAuthStateChanged((user) => {
+      if (user) history.push('/dashboard');
+    });
+    return () => unsub();
   }, [history]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
