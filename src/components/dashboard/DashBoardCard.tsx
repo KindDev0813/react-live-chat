@@ -15,9 +15,9 @@ const DashBoardCard: React.FC<DashBoardCardProps> = ({
   return (
     <Flex
       onClick={onOpen}
-      boxShadow="lg"
+      boxShadow="sm"
       _hover={{
-        boxShadow: 'xl',
+        boxShadow: 'md',
       }}
       bg="blackAlpha.100"
       w={['100%', '100%', '50%', '60%']}

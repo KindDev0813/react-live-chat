@@ -22,14 +22,12 @@ const DashBoardRoomCard: React.FC<DashBoardRoomCardProps> = ({ room }) => {
       h="10"
       align="center"
       cursor="pointer"
-      _hover={{ background: 'blackAlpha.200' }}
+      _hover={{ background: 'blackAlpha.100' }}
       transition="all 0.35s ease"
       onClick={handleClick}
     >
-      <Flex px="5" justifyContent="space-between" alignItems="center">
-        <Text mr="10" fontSize="lg">
-          {roomName}
-        </Text>
+      <Flex px="5" justifyContent="space-between" alignItems="center" w="100%">
+        <Text fontSize="lg">{roomName}</Text>
         {authUser?.username === admin && (
           <Text color="gray.500" fontSize="sm">
             You are admin

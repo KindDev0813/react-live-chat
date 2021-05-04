@@ -63,8 +63,9 @@ const Room = () => {
         m="auto"
         height="97%"
         border="1px"
-        borderRadius="3px"
-        borderColor="blackAlpha.200"
+        borderRadius="md"
+        borderColor="blackAlpha.300"
+        shadow="lg"
       >
         <RoomLeft roomMates={room.roomMates} />
         <RoomRight room={room} />

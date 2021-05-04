@@ -46,7 +46,7 @@ const RoomChatInput: React.FC<RoomChatInputProps> = ({ sender, roomId }) => {
             onKeyUp={(e) => {
               if (e.code === 'Enter') sendMessage();
             }}
-            bg="blackAlpha.200"
+            bg="blackAlpha.100"
           />
           <InputRightElement width="4.5rem">
             <IconButton

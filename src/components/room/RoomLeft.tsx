@@ -10,12 +10,18 @@ const RoomLeft: React.FC<RoomLeftProps> = ({ roomMates }) => {
     <Box h="100%" width="30%" borderRight="1px" borderColor="blackAlpha.200">
       <Box
         w="100%"
-        p="3"
         h="8%"
+        pl="3"
         borderBottom="1px"
-        borderColor="blackAlpha.200"
+        borderColor="blackAlpha.300"
+        display="flex"
+        flexDirection="column"
+        justifyContent="center"
       >
-        <Text fontSize="lg">RoomMates</Text>
+        <Text fontSize="lg">Roommates</Text>
+        <Text fontSize="small" textColor="teal.400">
+          {roomMates.length} online
+        </Text>
       </Box>
       <Box px="4" overflowY="scroll" h="92%">
         {roomMates.map((mate) => {

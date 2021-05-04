@@ -14,7 +14,7 @@ const Navbar = () => {
   };
 
   return (
-    <Box py="1" shadow="md">
+    <Box py="1">
       <Box
         w="90%"
         h="100%"

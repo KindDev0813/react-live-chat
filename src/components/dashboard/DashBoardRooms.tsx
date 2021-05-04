@@ -9,31 +9,6 @@ const DashBoardRooms = () => {
   const authUser = useAuth((state) => state.authUser);
   const [rooms, setRooms] = useState<RoomType[] | null>();
 
-  // useEffect(() => {
-  //   const getUesrRooms = async () => {
-  //     const roomIds = authUser?.activeRooms;
-  //     const rooms: RoomType[] = [];
-  //     await roomIds!.reduce(async (promise, file) => {
-  //       await promise;
-  //       const roomDoc = await db.collection('rooms').doc(file).get();
-  //       const roomData = roomDoc.data();
-  //       if (!roomData) {
-  //         console.log('room data doesnot exitst');
-  //         return;
-  //       }
-  //       const room: RoomType = {
-  //         admin: roomData.admin,
-  //         roomId: roomData.roomId,
-  //         roomName: roomData.roomName,
-  //         roomMates: roomData.roomMates,
-  //       };
-  //       rooms.push(room);
-  //     }, Promise.resolve());
-  //     setRooms(rooms);
-  //   };
-  //   getUesrRooms();
-  // }, [authUser?.uid, authUser?.activeRooms]);
-
   useEffect(() => {
     db.collection('dashrooms')
       .doc(authUser?.uid)
@@ -47,7 +22,7 @@ const DashBoardRooms = () => {
   if (!rooms) return <h1>Loading..</h1>;
 
   return (
-    <Box>
+    <Box width="90%" margin="auto">
       <Text fontSize="2xl" mb="3" fontWeight="medium" px="4">
         Your Rooms
       </Text>

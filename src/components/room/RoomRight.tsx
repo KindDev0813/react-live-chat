@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Text } from '@chakra-ui/layout';
+import { Box, Flex, Text } from '@chakra-ui/layout';
 
 import { RoomType } from '../../pages/Room';
 import { useAuth } from '../../state/authState';
@@ -47,12 +47,17 @@ const RoomRight: React.FC<RoomRightProps> = ({ room }) => {
         p="3"
         h="8%"
         borderBottom="1px"
-        borderColor="blackAlpha.200"
+        borderColor="blackAlpha.300"
         display="flex"
         justifyContent="space-between"
         alignItems="center"
       >
-        <Text fontSize="lg">{roomName}</Text>
+        <Flex flexDirection="column" justifyContent="center">
+          <Text fontSize="lg">{roomName}</Text>
+          <Text fontSize="small" textColor="teal.400">
+            created by {roomAdmin}
+          </Text>
+        </Flex>
         <RoomRightDropdown roomAdmin={roomAdmin} roomId={roomId} />
       </Box>
 
