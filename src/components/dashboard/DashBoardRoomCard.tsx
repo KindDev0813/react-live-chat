@@ -31,7 +31,7 @@ const DashBoardRoomCard: React.FC<DashBoardRoomCardProps> = ({ room }) => {
       <Flex px="5" justifyContent="space-between" alignItems="center" w="100%">
         <Text fontSize="lg">{roomName}</Text>
         {authUser?.username === admin && (
-          <Text color="gray.500" fontSize="sm">
+          <Text color="teal.500" fontSize="sm">
             You are admin
           </Text>
         )}

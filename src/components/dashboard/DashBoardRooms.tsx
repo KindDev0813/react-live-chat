@@ -1,3 +1,4 @@
+import { Image } from '@chakra-ui/image';
 import { Box, Stack, Text } from '@chakra-ui/layout';
 import { Skeleton } from '@chakra-ui/skeleton';
 import { useEffect, useState } from 'react';
@@ -35,12 +36,29 @@ const DashBoardRooms = () => {
 
   return (
     <Box width="90%" margin="auto">
-      <Text fontSize="2xl" mb="3" fontWeight="medium" px="4">
-        Your Rooms
-      </Text>
-      {rooms.map((room) => (
-        <DashBoardRoomCard room={room} key={Math.round(Math.random() * 1000)} />
-      ))}
+      {rooms.length === 0 && (
+        <Box px="4">
+          <Text fontSize="7xl" textAlign="center" textColor="darkslategray">
+            No rooms found
+          </Text>
+          <Box boxSize="30%">
+            <Image src="/noroomfound.webp" alt="no room found" />
+          </Box>
+        </Box>
+      )}
+      {rooms.length !== 0 && (
+        <>
+          <Text fontSize="2xl" mb="3" fontWeight="medium" px="4">
+            Your Rooms
+          </Text>
+          {rooms.map((room) => (
+            <DashBoardRoomCard
+              room={room}
+              key={Math.round(Math.random() * 1000)}
+            />
+          ))}
+        </>
+      )}
     </Box>
   );
 };
