@@ -60,11 +60,11 @@ const App: React.FC = () => {
             <Route path="/" exact component={Home} />
             <Container maxW="container.xl" pt="2">
               <Route path="/signup" component={SignUp} />
-              <Route path="/login" exact component={Login} />
+              <Route path="/login" component={Login} />
               <Route path="/dashboard" component={DashBoard} />
               <Route path="/room/:roomId" component={Room} />
-              <Route component={NotFound} />
             </Container>
+            <Route component={NotFound} />
           </Switch>
         </>
       )}
