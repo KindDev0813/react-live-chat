@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button } from '@chakra-ui/button';
+import { Button, IconButton } from '@chakra-ui/button';
 import {
   FormControl,
   FormErrorMessage,
@@ -12,6 +12,7 @@ import { auth, db } from '../firebase';
 import { useAuth } from '../state/authState';
 import { useToast } from '@chakra-ui/toast';
 import { Link, useHistory } from 'react-router-dom';
+import { FiEye, FiEyeOff } from 'react-icons/fi';
 
 interface SignUpError {
   username?: string;
@@ -154,10 +155,14 @@ const SignUp = () => {
               value={data.password}
               onChange={handleChange}
             />
-            <InputRightElement width="4.5rem">
-              <Button h="1.75rem" size="sm" onClick={handleClick}>
-                {show ? 'Hide' : 'Show'}
-              </Button>
+            <InputRightElement>
+              <IconButton
+                bg="transparent !important"
+                variant="ghost"
+                aria-label={show ? 'Mask password' : 'Reveal password'}
+                icon={show ? <FiEyeOff /> : <FiEye />}
+                onClick={handleClick}
+              />
             </InputRightElement>
           </InputGroup>
           <FormErrorMessage>{errors.password}</FormErrorMessage>
