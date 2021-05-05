@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Button } from '@chakra-ui/button';
+import { Button, IconButton } from '@chakra-ui/button';
 import {
   FormControl,
   FormErrorMessage,
   FormLabel,
 } from '@chakra-ui/form-control';
 import { Input, InputGroup, InputRightElement } from '@chakra-ui/input';
+import { FiEye, FiEyeOff } from 'react-icons/fi';
+
 import { Box, Text } from '@chakra-ui/layout';
 import { useAuth } from '../state/authState';
 import { Link, useHistory } from 'react-router-dom';
@@ -136,10 +138,14 @@ const Login = () => {
               value={data.password}
               onChange={handleChange}
             />
-            <InputRightElement width="4.5rem">
-              <Button h="1.75rem" size="sm" onClick={handleClick}>
-                {show ? 'Hide' : 'Show'}
-              </Button>
+            <InputRightElement>
+              <IconButton
+                bg="transparent !important"
+                variant="ghost"
+                aria-label={show ? 'Mask password' : 'Reveal password'}
+                icon={show ? <FiEyeOff /> : <FiEye />}
+                onClick={handleClick}
+              />
             </InputRightElement>
           </InputGroup>
           <FormErrorMessage>{errors.password}</FormErrorMessage>
