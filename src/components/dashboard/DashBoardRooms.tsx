@@ -42,7 +42,10 @@ const DashBoardRooms = () => {
             No rooms found
           </Text>
           <Box boxSize="30%">
-            <Image src="/noroomfond.jpg" alt="no room found" />
+            <Image
+              src="https://firebasestorage.googleapis.com/v0/b/react-room-chat.appspot.com/o/noroomfound.jpg?alt=media&token=57ca4942-9c88-404d-aa5a-cd744cdd8cc2"
+              alt="no room found"
+            />
           </Box>
         </Box>
       )}
