@@ -42,7 +42,7 @@ const DashBoardRooms = () => {
             No rooms found
           </Text>
           <Box boxSize="30%">
-            <Image src="/noroomfound.webp" alt="no room found" />
+            <Image src="/noroomfond.jpg" alt="no room found" />
           </Box>
         </Box>
       )}
