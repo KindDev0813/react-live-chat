@@ -13,7 +13,7 @@ interface RoomRightProps {
 }
 
 const RoomRight: React.FC<RoomRightProps> = ({ room }) => {
-  const { roomName, roomId, admin: roomAdmin, roomMates } = room;
+  const { roomName, roomId, roomMates } = room;
   const authUser = useAuth((state) => state.authUser);
   const [messages, setMessages] = useState<RoomMessageType[]>([]);
 
@@ -58,7 +58,7 @@ const RoomRight: React.FC<RoomRightProps> = ({ room }) => {
             {roomMates.length} Online
           </Text>
         </Flex>
-        <RoomRightDropdown roomAdmin={roomAdmin} roomId={roomId} />
+        <RoomRightDropdown room={room} />
       </Box>
 
       <Box h="92%">

@@ -57,12 +57,33 @@ const JoinRoomModel: React.FC<ModalProps> = ({ isOpen, onClose }) => {
         setLoading((l) => !l);
         return;
       }
+
+      //! check if user is banned
+      const isUserBanned = roomData.bannedUsers
+        .map((user: any) => user.uid)
+        .includes(authUser?.uid);
+
+      if (isUserBanned) {
+        setError('');
+        setRoomId('');
+        onClose();
+        setLoading((loading) => !loading);
+        return toast({
+          title: `You are Banned by Admin`,
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+
+      //! check if user is in roomMates array
       const isUserThere = roomData.roomMates
         .map((user: any) => user.uid)
         .includes(authUser?.uid);
 
       if (isUserThere) {
         onClose();
+        setError('');
         setLoading((loading) => !loading);
         history.push(`/room/${roomId}`);
         return toast({
@@ -132,7 +153,13 @@ const JoinRoomModel: React.FC<ModalProps> = ({ isOpen, onClose }) => {
         <ModalHeader textAlign="center" fontSize="3xl">
           Join a Room
         </ModalHeader>
-        <ModalCloseButton />
+        <ModalCloseButton
+          onClick={() => {
+            setError('');
+            setRoomId('');
+            onClose();
+          }}
+        />
         <ModalBody>
           <Stack spacing="24px">
             <Box>
@@ -151,7 +178,16 @@ const JoinRoomModel: React.FC<ModalProps> = ({ isOpen, onClose }) => {
         </ModalBody>
 
         <ModalFooter>
-          <Button colorScheme="red" mr={3} onClick={onClose} variant="outline">
+          <Button
+            colorScheme="red"
+            mr={3}
+            onClick={() => {
+              setError('');
+              setRoomId('');
+              onClose();
+            }}
+            variant="outline"
+          >
             Close
           </Button>
           <Button
