@@ -45,7 +45,7 @@ const Room = () => {
               roomId: roomData?.roomId,
               roomName: roomData?.roomName,
               roomMates: roomData?.roomMates,
-              bannedUsers: [],
+              bannedUsers: roomData?.roomMates,
             };
             setRoom(room);
           } else {

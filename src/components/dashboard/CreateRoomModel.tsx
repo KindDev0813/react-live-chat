@@ -43,6 +43,7 @@ const CreateRoomModel: React.FC<ModalProps> = ({ isOpen, onClose }) => {
       roomName: data.roomName,
       admin: authUser?.username,
       roomMates: [{ username: authUser?.username, uid: authUser?.uid }],
+      bannedUsers: [],
     };
     try {
       setLoading((loading) => !loading);
