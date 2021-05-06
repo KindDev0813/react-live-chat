@@ -5,7 +5,7 @@ import { Button } from '@chakra-ui/button';
 import { useAuth } from '../state/authState';
 import { Avatar } from '@chakra-ui/avatar';
 import { useDisclosure } from '@chakra-ui/hooks';
-import UserProfileDrawer from './UserProfileDrawer';
+import UserProfileDrawer from './profile/ProfileDrawer';
 
 const Navbar = () => {
   const history = useHistory();
