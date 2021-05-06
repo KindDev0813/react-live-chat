@@ -100,8 +100,16 @@ const BanUsersModel: React.FC<BanUsersModelProps> = ({
     }
   };
 
+  console.log(toBan);
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal
+      isOpen={isOpen}
+      onClose={() => {
+        setToBan([]);
+        onClose();
+      }}
+    >
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Select Users to Ban</ModalHeader>

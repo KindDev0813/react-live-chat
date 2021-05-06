@@ -3,11 +3,16 @@ import { Link, useHistory } from 'react-router-dom';
 import { Box, Stack, Text } from '@chakra-ui/layout';
 import { Button } from '@chakra-ui/button';
 import { useAuth } from '../state/authState';
+import { Avatar } from '@chakra-ui/avatar';
+import { useDisclosure } from '@chakra-ui/hooks';
+import UserProfileDrawer from './UserProfileDrawer';
 
 const Navbar = () => {
   const history = useHistory();
   const logout = useAuth((state) => state.logout);
   const authUser = useAuth((state) => state.authUser);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   const handleLogout = () => {
     logout();
     history.push('/');
@@ -33,17 +38,27 @@ const Navbar = () => {
         >
           Room Chat
         </Text>
-        <Stack direction={{ base: 'column', sm: 'row' }}>
+        <Stack direction={{ base: 'column', sm: 'row' }} alignItems="center">
           {authUser ? (
             <>
-              <Button fontWeight="normal" colorScheme="gray" variant="ghost">
-                {authUser.username}
+              <Button
+                fontWeight="normal"
+                colorScheme="gray"
+                variant="ghost"
+                size="md"
+                onClick={() => onOpen()}
+              >
+                <Box cursor="pointer">
+                  <Avatar colorScheme="teal" size="sm" />
+                </Box>
+                <Text ml="2">{authUser.username}</Text>
               </Button>
               <Button
                 onClick={handleLogout}
                 fontWeight="normal"
                 colorScheme="gray"
                 variant="ghost"
+                size="md"
               >
                 Logout
               </Button>
@@ -72,6 +87,7 @@ const Navbar = () => {
           )}
         </Stack>
       </Box>
+      <UserProfileDrawer isOpen={isOpen} onClose={onClose} />
     </Box>
   );
 };
