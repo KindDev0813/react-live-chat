@@ -1,11 +1,18 @@
-import React, { useState } from 'react';
-import { Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/menu';
+import React, { useState, useRef } from 'react';
+import {
+  Menu,
+  MenuButton,
+  MenuDivider,
+  MenuItem,
+  MenuList,
+} from '@chakra-ui/menu';
 import { BsFillGearFill } from 'react-icons/bs';
 import { FaRegCopy } from 'react-icons/fa';
 import { BiExit } from 'react-icons/bi';
 import { AiFillDelete } from 'react-icons/ai';
+import { FaBan } from 'react-icons/fa';
 import { Button, IconButton } from '@chakra-ui/button';
-import { useClipboard } from '@chakra-ui/hooks';
+import { useClipboard, useDisclosure } from '@chakra-ui/hooks';
 import firebase from 'firebase/app';
 
 import { useAuth } from '../../state/authState';
@@ -20,27 +27,31 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
 } from '@chakra-ui/modal';
+import BanUsersModel from './BanUsersModel';
+import { RoomType } from '../../pages/Room';
 
 interface RoomRightDropdownProps {
-  roomId: string;
-  roomAdmin: string;
+  room: RoomType;
 }
 
-const RoomRightDropdown: React.FC<RoomRightDropdownProps> = ({
-  roomId,
-  roomAdmin,
-}) => {
+const RoomRightDropdown: React.FC<RoomRightDropdownProps> = ({ room }) => {
+  const { roomId, admin: roomAdmin, roomMates, bannedUsers } = room;
   const { hasCopied, onCopy } = useClipboard(roomId);
   const authUser = useAuth((state) => state.authUser);
+  const cancelRef = useRef();
   const history = useHistory();
-  const [isOpen, setIsOpen] = React.useState(false);
+  const {
+    isOpen: isOpenModel,
+    onOpen: onOpenModel,
+    onClose: onCloseModel,
+  } = useDisclosure();
   const onClose = () => setIsOpen(false);
-  const cancelRef = React.useRef();
+  const [isOpen, setIsOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
   const handleLeaveRoom = async () => {
     const userRef = db.collection('users').doc(authUser?.uid);
-    const room = await db.collection('rooms').doc(roomId);
+    const room = db.collection('rooms').doc(roomId);
     try {
       await room.update({
         roomMates: firebase.firestore.FieldValue.arrayRemove({
@@ -133,6 +144,18 @@ const RoomRightDropdown: React.FC<RoomRightDropdownProps> = ({
               Leave Room
             </MenuItem>
           )}
+          <MenuDivider />
+          {authUser?.username === roomAdmin && (
+            <MenuItem
+              color="red.500"
+              onClick={() => {
+                onOpenModel();
+              }}
+              icon={<FaBan size={18} />}
+            >
+              Ban Roommates
+            </MenuItem>
+          )}
           {authUser?.username === roomAdmin && (
             <MenuItem
               color="red.500"
@@ -144,6 +167,7 @@ const RoomRightDropdown: React.FC<RoomRightDropdownProps> = ({
           )}
         </MenuList>
       </Menu>
+
       <AlertDialog
         isOpen={isOpen}
         leastDestructiveRef={cancelRef.current}
@@ -175,6 +199,14 @@ const RoomRightDropdown: React.FC<RoomRightDropdownProps> = ({
           </AlertDialogContent>
         </AlertDialogOverlay>
       </AlertDialog>
+      <BanUsersModel
+        isOpen={isOpenModel}
+        onClose={onCloseModel}
+        roomMates={roomMates}
+        roomId={roomId}
+        bannedUsers={bannedUsers}
+      />
+      {/* ban users model */}
     </>
   );
 };

@@ -14,6 +14,7 @@ export interface RoomType {
   roomId: string;
   roomName: string;
   roomMates: { uid: string; username: string }[];
+  bannedUsers: { uid: string; username: string }[];
 }
 
 const Room = () => {
@@ -44,6 +45,7 @@ const Room = () => {
               roomId: roomData?.roomId,
               roomName: roomData?.roomName,
               roomMates: roomData?.roomMates,
+              bannedUsers: roomData?.roomMates,
             };
             setRoom(room);
           } else {

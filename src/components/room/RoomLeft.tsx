@@ -24,7 +24,7 @@ const RoomLeft: React.FC<RoomLeftProps> = ({ roomMates, roomAdmin }) => {
       <Box px="4" overflowY="scroll" h="92%">
         {roomMates.map((mate) => {
           return (
-            <div key={Math.ceil(Math.round(100))}>
+            <div key={Math.ceil(Math.random() * 9999)}>
               <Box py="2" d="flex" flexDirection="column">
                 <Text fontSize="md">
                   {mate.username}
