@@ -9,28 +9,30 @@ import { useAuth } from '../state/authState';
 
 const Profile = () => {
   const authUser = useAuth((s) => s.authUser);
-  const [data, setData] = useState<{
-    createdRooms: number;
-    activeRooms: number;
-  }>({ createdRooms: 0, activeRooms: 0 });
+  const [data, setData] = useState<
+    | {
+        createdRooms: number;
+        activeRooms: number;
+      }
+    | undefined
+  >();
 
   useEffect(() => {
-    const unsub = db
-      .collection('dashrooms')
-      .doc(authUser?.uid)
-      .onSnapshot((qs) => {
-        const state = { activeRooms: 0, createdRooms: 0 };
-        const qsData = qs.data();
-        const rooms = Object.values({ ...qsData });
-        state.activeRooms = rooms.length;
-        state.createdRooms = rooms.reduce((acc, curr) => {
-          if (curr.admin === authUser?.username) return (acc += 1);
-          else return acc;
-        }, 0);
-        setData(state);
-      });
-    return unsub;
+    (async () => {
+      const doc = await db.collection('dashrooms').doc(authUser?.uid).get();
+      const state: any = {};
+      const qsData = doc.data();
+      const rooms = Object.values({ ...qsData });
+      state.activeRooms = rooms.length;
+      state.createdRooms = rooms.reduce((acc, curr) => {
+        if (curr.admin === authUser?.username) return (acc += 1);
+        else return acc;
+      }, 0);
+      setData(state);
+    })();
   }, [authUser]);
+
+  if (!data) return <></>;
 
   return (
     <Box w="90%" mx="auto" p="4" d="flex" justifyContent="space-around">
