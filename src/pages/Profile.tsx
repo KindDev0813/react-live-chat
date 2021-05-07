@@ -1,4 +1,4 @@
-import { Image } from '@chakra-ui/image';
+// import { Image } from '@chakra-ui/image';
 import { Box, Text } from '@chakra-ui/layout';
 import { useEffect, useState } from 'react';
 import ProfileEdit from '../components/profile/ProfileEdit';
@@ -42,7 +42,7 @@ const Profile = () => {
           alignItems="center"
           mt="3"
         >
-          <Box
+          {/* <Box
             boxSize="18rem"
             d="flex"
             justifyContent="center"
@@ -54,7 +54,7 @@ const Profile = () => {
               alt="Segun Adebayo"
               borderRadius="full"
             />
-          </Box>
+          </Box> */}
           <ProfileUsername username={authUser?.username} />
           <Text>{authUser?.email}</Text>
           <Box
@@ -65,10 +65,7 @@ const Profile = () => {
             mt="4"
             h="36"
           >
-            <ProfileRoomStatCard
-              text="Rooms Created"
-              count={data.activeRooms}
-            />
+            <ProfileRoomStatCard text="Rooms Active" count={data.activeRooms} />
             <ProfileRoomStatCard
               text="Rooms Created"
               count={data.createdRooms}

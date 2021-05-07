@@ -8,6 +8,7 @@ import { Input } from '@chakra-ui/input';
 import { Box, Text } from '@chakra-ui/layout';
 import { useToast } from '@chakra-ui/toast';
 import { useState } from 'react';
+import firebase from 'firebase/app';
 // import { useHistory } from 'react-router';
 import { auth, db } from '../../firebase';
 import { AuthUser, useAuth } from '../../state/authState';
@@ -31,68 +32,112 @@ const ProfileEdit: React.FC = () => {
     newAuthUser: AuthUser,
     oldUsername: string | null | undefined
   ) => {
-    const dashRoomsDoc = await db
-      .collection('dashrooms')
-      .doc(authUser?.uid)
-      .get();
-    const dashRoomsData = dashRoomsDoc.data();
-    if (!dashRoomsData) return; // toast here
-    const keys = Object.keys(dashRoomsData);
-    const values = Object.values(dashRoomsData);
+    try {
+      const dashRoomsDoc = await db
+        .collection('dashrooms')
+        .doc(authUser?.uid)
+        .get();
+      const dashRoomsData = dashRoomsDoc.data();
+      if (!dashRoomsData) return; // toast here
+      const keys = Object.keys(dashRoomsData);
+      const values = Object.values(dashRoomsData);
 
-    const newValues = values.map((item) => {
-      let newObj: any = { ...item };
-      if (item.admin === oldUsername) {
-        newObj = { ...newObj, admin: newAuthUser.username };
-      }
-      //
-      const oldRoomMates = item.roomMates;
-      let newRoomMates: { uid: string; username: string }[] = [];
-      newRoomMates = oldRoomMates.map(
-        (mate: { uid: string; username: string }) => {
-          if (mate.uid === newAuthUser.uid) {
-            return {
-              ...mate,
-              username: newAuthUser.username,
-            };
-          } else {
-            return mate;
-          }
+      const newValues = values.map((item) => {
+        let newObj: any = { ...item };
+        if (item.admin === oldUsername) {
+          newObj = { ...newObj, admin: newAuthUser.username };
         }
-      );
-      newObj.roomMates = newRoomMates;
-      //
-      const oldBannedUsers = item.bannedUsers;
-      let newBananedUsers: { uid: string; username: string }[] = [];
-      newBananedUsers = oldBannedUsers.map(
-        (user: { uid: string; username: string }) => {
-          if (user.uid === newAuthUser.uid) {
-            return {
-              ...user,
-              username: newAuthUser.username,
-            };
-          } else {
-            return user;
-          }
+        return newObj;
+      });
+
+      const newDashRooms: any = {};
+      keys.forEach((key, i) => {
+        newDashRooms[key] = newValues[i];
+      });
+
+      await db.collection('dashrooms').doc(newAuthUser.uid).set(newDashRooms);
+    } catch (err) {
+      console.log(err.code);
+      console.log(err.message);
+    }
+    try {
+      const roomIds = newAuthUser.activeRooms;
+      await roomIds.reduce(async (promise: any, roomId: string) => {
+        await promise;
+        const roomRef = db.collection('rooms').doc(roomId);
+        const roomDoc = await roomRef.get();
+        const roomData = roomDoc.data();
+        if (!roomData) return; // toast here
+        if (roomData.admin === oldUsername) {
+          await roomRef.update({ admin: newAuthUser.username });
         }
-      );
-      newObj.bannedUsers = newBananedUsers;
+        const oldRoomMates = roomData.roomMates;
+        let newRoomMates: { uid: string; username: string }[] = [];
+        newRoomMates = oldRoomMates.map(
+          (mate: { uid: string; username: string }) => {
+            if (mate.uid === newAuthUser.uid) {
+              return {
+                ...mate,
+                username: newAuthUser.username,
+              };
+            } else {
+              return mate;
+            }
+          }
+        );
+        await roomRef.update({
+          roomMates: newRoomMates,
+        });
+        //
+        const oldBannedUsers = roomData.bannedUsers;
+        let newBannedUsers: { uid: string; username: string }[] = [];
+        newBannedUsers = oldBannedUsers.map(
+          (mate: { uid: string; username: string }) => {
+            if (mate.uid === newAuthUser.uid) {
+              return {
+                ...mate,
+                username: newAuthUser.username,
+              };
+            } else {
+              return mate;
+            }
+          }
+        );
+        await roomRef.update({
+          bannedUsers: newBannedUsers,
+        });
+      }, Promise.resolve());
+    } catch (err) {
+      console.log(err.code);
+      console.log(err.message);
+    }
 
-      return newObj;
-    });
+    try {
+      const roomIds = newAuthUser.activeRooms;
+      await roomIds.reduce(async (promise: any, roomId: string) => {
+        await promise;
+        const messagesDocs = await db
+          .collection('roomMessages')
+          .doc(roomId)
+          .collection('messages')
+          .where('sender', '==', oldUsername)
+          .get();
 
-    const newDashRooms: any = {};
-    keys.forEach((key, i) => {
-      newDashRooms[key] = newValues[i];
-    });
-
-    await db.collection('dashrooms').doc(newAuthUser.uid).set(newDashRooms);
-
-    console.log(newDashRooms);
+        await messagesDocs.docs.reduce(
+          async (
+            promise: any,
+            doc: firebase.firestore.QueryDocumentSnapshot<firebase.firestore.DocumentData>
+          ) => {
+            await promise;
+            await doc.ref.update({ sender: newAuthUser.username });
+          },
+          Promise.resolve()
+        );
+      }, Promise.resolve());
+    } catch (err) {}
   };
 
   const handleUserProfileUpdate = async () => {
-    console.log(data);
     if (data.username.trim() === '') {
       return setErrors({ username: 'Username cannot be emtpy' });
     }
@@ -132,21 +177,21 @@ const ProfileEdit: React.FC = () => {
         email: newUserData?.email ?? 'undefined',
         activeRooms: newUserData?.activeRooms ?? 'undefined',
       };
-      setAuthUser(newAuthUser);
       hardUsernameEdit(newAuthUser, user?.displayName);
       await user?.updateProfile({ displayName: data.username });
+      setAuthUser(newAuthUser);
+      setLoading((l) => !l);
+      setData({ username: '' });
+      toast({
+        title: 'Username updated',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
     } catch (err) {
       console.log(err.code);
       console.log(err.message);
     }
-    // will edit username in room, dashrooms, roomMessages;
-    toast({
-      title: 'Updating username in rooms takes some time',
-      status: 'info',
-      duration: 3000,
-      isClosable: true,
-    });
-    setLoading((l) => !l);
   };
 
   return (
