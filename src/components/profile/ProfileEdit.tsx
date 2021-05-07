@@ -4,7 +4,7 @@ import {
   FormErrorMessage,
   FormLabel,
 } from '@chakra-ui/form-control';
-import { Input } from '@chakra-ui/input';
+import { Input, InputGroup, InputRightElement } from '@chakra-ui/input';
 import { Box, Text } from '@chakra-ui/layout';
 import { useToast } from '@chakra-ui/toast';
 import { useState } from 'react';
@@ -12,6 +12,7 @@ import firebase from 'firebase/app';
 // import { useHistory } from 'react-router';
 import { auth, db } from '../../firebase';
 import { AuthUser, useAuth } from '../../state/authState';
+import ProfileImageUpload from './ProfileImageUpload';
 
 // interface ProfielEditProps {}
 
@@ -176,6 +177,7 @@ const ProfileEdit: React.FC = () => {
         username: newUserData?.username ?? 'undefined',
         email: newUserData?.email ?? 'undefined',
         activeRooms: newUserData?.activeRooms ?? 'undefined',
+        profileImgUrl: newUserData?.profileImgUrl ?? 'undefind',
       };
       hardUsernameEdit(newAuthUser, user?.displayName);
       await user?.updateProfile({ displayName: data.username });
@@ -197,32 +199,41 @@ const ProfileEdit: React.FC = () => {
   return (
     <>
       <Box w="80%" mx="auto">
-        <Text fontSize="3xl">Update Profile</Text>
+        <Text fontSize="3xl" textAlign="center">
+          Update Profile
+        </Text>
         <FormControl
           id="username"
-          my="2"
           isRequired
           isInvalid={errors.username ? true : false}
           mt="6"
+          mb="3"
         >
           <FormLabel>Username</FormLabel>
-          <Input
-            type="text"
-            name="username"
-            value={data.username}
-            onChange={handleChange}
-          />
+          <InputGroup size="md">
+            <Input
+              type="text"
+              name="username"
+              value={data.username}
+              onChange={handleChange}
+            />
+            <InputRightElement w="fit-content">
+              <Button
+                mr="2"
+                size="xs"
+                colorScheme="teal"
+                onClick={handleUserProfileUpdate}
+                isLoading={loading}
+                loadingText="Updating..."
+              >
+                Update
+              </Button>
+            </InputRightElement>
+          </InputGroup>
           <FormErrorMessage>{errors.username}</FormErrorMessage>
         </FormControl>
 
-        <Button
-          colorScheme="teal"
-          onClick={handleUserProfileUpdate}
-          isLoading={loading}
-          loadingText="Updating..."
-        >
-          Update
-        </Button>
+        <ProfileImageUpload uid={authUser?.uid} />
       </Box>
     </>
   );

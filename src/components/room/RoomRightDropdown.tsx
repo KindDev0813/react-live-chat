@@ -101,6 +101,7 @@ const RoomRightDropdown: React.FC<RoomRightDropdownProps> = ({ room }) => {
           const res = await db.collection('dashrooms').doc(user?.uid).get();
           const resData = res.data();
           const key: number = getKeyOfRoom(resData, roomId);
+          console.log('key of the room is: ', key);
           const obj: any = {};
           obj[key] = firebase.firestore.FieldValue.delete();
           await db.collection('dashrooms').doc(user.uid).update(obj);

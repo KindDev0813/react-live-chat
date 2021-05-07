@@ -1,36 +1,38 @@
-// import { Image } from '@chakra-ui/image';
 import { Box, Text } from '@chakra-ui/layout';
 import { useEffect, useState } from 'react';
 import ProfileEdit from '../components/profile/ProfileEdit';
 import ProfileRoomStatCard from '../components/profile/ProfileRoomStatCard';
 import ProfileUsername from '../components/profile/ProfileUsername';
+import ProfileImage from '../components/ProfileImage';
 import { db } from '../firebase';
 import { useAuth } from '../state/authState';
 
 const Profile = () => {
   const authUser = useAuth((s) => s.authUser);
-  const [data, setData] = useState<{
-    createdRooms: number;
-    activeRooms: number;
-  }>({ createdRooms: 0, activeRooms: 0 });
+  const [data, setData] = useState<
+    | {
+        createdRooms: number;
+        activeRooms: number;
+      }
+    | undefined
+  >();
 
   useEffect(() => {
-    const unsub = db
-      .collection('dashrooms')
-      .doc(authUser?.uid)
-      .onSnapshot((qs) => {
-        const state = { activeRooms: 0, createdRooms: 0 };
-        const qsData = qs.data();
-        const rooms = Object.values({ ...qsData });
-        state.activeRooms = rooms.length;
-        state.createdRooms = rooms.reduce((acc, curr) => {
-          if (curr.admin === authUser?.username) return (acc += 1);
-          else return acc;
-        }, 0);
-        setData(state);
-      });
-    return unsub;
+    (async () => {
+      const doc = await db.collection('dashrooms').doc(authUser?.uid).get();
+      const state: any = {};
+      const qsData = doc.data();
+      const rooms = Object.values({ ...qsData });
+      state.activeRooms = rooms.length;
+      state.createdRooms = rooms.reduce((acc, curr) => {
+        if (curr.admin === authUser?.username) return (acc += 1);
+        else return acc;
+      }, 0);
+      setData(state);
+    })();
   }, [authUser]);
+
+  if (!data) return <></>;
 
   return (
     <Box w="90%" mx="auto" p="4" d="flex" justifyContent="space-around">
@@ -42,19 +44,16 @@ const Profile = () => {
           alignItems="center"
           mt="3"
         >
-          {/* <Box
+          <Box
             boxSize="18rem"
             d="flex"
             justifyContent="center"
             alignItems="center"
+            overflow="hidden"
+            borderRadius="full"
           >
-            <Image
-              boxSize=""
-              src="https://bit.ly/prosper-baba"
-              alt="Segun Adebayo"
-              borderRadius="full"
-            />
-          </Box> */}
+            <ProfileImage url={authUser?.profileImgUrl} />
+          </Box>
           <ProfileUsername username={authUser?.username} />
           <Text>{authUser?.email}</Text>
           <Box
