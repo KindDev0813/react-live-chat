@@ -66,7 +66,12 @@ const SignUp = () => {
       await db
         .collection('users')
         .doc(user.uid)
-        .set({ uid: user.uid, email: data.email, username: data.username });
+        .set({
+          uid: user.uid,
+          email: data.email,
+          username: data.username,
+          profileImgUrl: '',
+        });
 
       toast({
         title: 'Account created.',

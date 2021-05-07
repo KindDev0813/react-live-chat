@@ -47,7 +47,11 @@ const Navbar = () => {
                 to="/profile"
               >
                 <Box cursor="pointer">
-                  <Avatar colorScheme="teal" size="sm" />
+                  <Avatar
+                    src={authUser.profileImgUrl}
+                    colorScheme="teal"
+                    size="sm"
+                  />
                 </Box>
                 <Text ml="2">{authUser.username}</Text>
               </Button>

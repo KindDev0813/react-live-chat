@@ -31,6 +31,7 @@ const App: React.FC = () => {
                 username: user?.username ?? 'undefined',
                 email: user?.email ?? 'undefined',
                 activeRooms: user?.activeRooms ?? 'undefined',
+                profileImgUrl: user?.profileImgUrl ?? 'undefined',
               };
               setAuthUser(authUser);
             } else {

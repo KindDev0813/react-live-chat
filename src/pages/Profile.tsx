@@ -1,9 +1,9 @@
-// import { Image } from '@chakra-ui/image';
 import { Box, Text } from '@chakra-ui/layout';
 import { useEffect, useState } from 'react';
 import ProfileEdit from '../components/profile/ProfileEdit';
 import ProfileRoomStatCard from '../components/profile/ProfileRoomStatCard';
 import ProfileUsername from '../components/profile/ProfileUsername';
+import ProfileImage from '../components/ProfileImage';
 import { db } from '../firebase';
 import { useAuth } from '../state/authState';
 
@@ -44,19 +44,16 @@ const Profile = () => {
           alignItems="center"
           mt="3"
         >
-          {/* <Box
+          <Box
             boxSize="18rem"
             d="flex"
             justifyContent="center"
             alignItems="center"
+            overflow="hidden"
+            borderRadius="full"
           >
-            <Image
-              boxSize=""
-              src="https://bit.ly/prosper-baba"
-              alt="Segun Adebayo"
-              borderRadius="full"
-            />
-          </Box> */}
+            <ProfileImage url={authUser?.profileImgUrl} />
+          </Box>
           <ProfileUsername username={authUser?.username} />
           <Text>{authUser?.email}</Text>
           <Box
