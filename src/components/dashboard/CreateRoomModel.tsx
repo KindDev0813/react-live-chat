@@ -69,7 +69,8 @@ const CreateRoomModel: React.FC<ModalProps> = ({ isOpen, onClose }) => {
           .set({
             1: {
               roomId: room.id,
-              ...roomData,
+              roomName: data.roomName,
+              admin: authUser?.username,
             },
           });
       } else {
@@ -77,7 +78,8 @@ const CreateRoomModel: React.FC<ModalProps> = ({ isOpen, onClose }) => {
         let obj: any = {};
         obj[max + 1] = {
           roomId: room.id,
-          ...roomData,
+          roomName: data.roomName,
+          admin: authUser?.username,
         };
         await db.collection('dashrooms').doc(authUser?.uid).update(obj);
       }
