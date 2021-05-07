@@ -45,8 +45,9 @@ const JoinRoomModel: React.FC<ModalProps> = ({ isOpen, onClose }) => {
     try {
       setLoading((l) => !l);
       setError('');
-      const room = await db.collection('rooms').doc(roomId);
+      const room = db.collection('rooms').doc(roomId);
       const roomDoc = await room.get();
+
       if (!roomDoc.exists) {
         setLoading((l) => !l);
         return setError('Invalid Room Id');
@@ -102,9 +103,11 @@ const JoinRoomModel: React.FC<ModalProps> = ({ isOpen, onClose }) => {
       await userRef.update({
         activeRooms: firebase.firestore.FieldValue.arrayUnion(room.id),
       });
+
       //! used for showing realtime data on dashboard of the user
       const res = await db.collection('dashrooms').doc(authUser?.uid).get();
       const resData = res.data();
+
       if (!resData) {
         await db
           .collection('dashrooms')
@@ -112,7 +115,8 @@ const JoinRoomModel: React.FC<ModalProps> = ({ isOpen, onClose }) => {
           .set({
             1: {
               roomId: room.id,
-              ...roomData,
+              roomName: roomData.roomName,
+              admin: roomData.admin,
             },
           });
       } else {
@@ -120,7 +124,8 @@ const JoinRoomModel: React.FC<ModalProps> = ({ isOpen, onClose }) => {
         let obj: any = {};
         obj[max + 1] = {
           roomId: room.id,
-          ...roomData,
+          roomName: roomData.roomName,
+          admin: roomData.admin,
         };
         await db.collection('dashrooms').doc(authUser?.uid).update(obj);
       }

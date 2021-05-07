@@ -100,8 +100,6 @@ const BanUsersModel: React.FC<BanUsersModelProps> = ({
     }
   };
 
-  console.log(toBan);
-
   return (
     <Modal
       isOpen={isOpen}
