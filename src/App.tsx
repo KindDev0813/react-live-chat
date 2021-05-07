@@ -11,6 +11,7 @@ import { auth, db } from './firebase';
 import { useAuth, AuthUser } from './state/authState';
 import Room from './pages/Room';
 import NotFound from './components/NotFound';
+import Profile from './pages/Profile';
 
 const App: React.FC = () => {
   const loading = useAuth((state) => state.loading);
@@ -63,6 +64,7 @@ const App: React.FC = () => {
               <Route path="/login" component={Login} />
               <Route path="/dashboard" component={DashBoard} />
               <Route path="/room/:roomId" component={Room} />
+              <Route path="/profile" component={Profile} />
             </Container>
             <Route component={NotFound} />
           </Switch>

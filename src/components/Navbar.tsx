@@ -4,14 +4,11 @@ import { Box, Stack, Text } from '@chakra-ui/layout';
 import { Button } from '@chakra-ui/button';
 import { useAuth } from '../state/authState';
 import { Avatar } from '@chakra-ui/avatar';
-import { useDisclosure } from '@chakra-ui/hooks';
-import UserProfileDrawer from './profile/ProfileDrawer';
 
 const Navbar = () => {
   const history = useHistory();
   const logout = useAuth((state) => state.logout);
   const authUser = useAuth((state) => state.authUser);
-  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleLogout = () => {
     logout();
@@ -46,7 +43,8 @@ const Navbar = () => {
                 colorScheme="gray"
                 variant="ghost"
                 size="md"
-                onClick={() => onOpen()}
+                as={Link}
+                to="/profile"
               >
                 <Box cursor="pointer">
                   <Avatar colorScheme="teal" size="sm" />
@@ -87,7 +85,6 @@ const Navbar = () => {
           )}
         </Stack>
       </Box>
-      <UserProfileDrawer isOpen={isOpen} onClose={onClose} />
     </Box>
   );
 };

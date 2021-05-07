@@ -5,20 +5,18 @@ import {
   FormLabel,
 } from '@chakra-ui/form-control';
 import { Input } from '@chakra-ui/input';
-import { DrawerBody, DrawerFooter } from '@chakra-ui/modal';
+import { Box, Text } from '@chakra-ui/layout';
 import { useState } from 'react';
+import { useHistory } from 'react-router';
 import { auth, db } from '../../firebase';
 import { useAuth } from '../../state/authState';
 
-interface ProfileDrawerEditMarkupProps {
-  edit: boolean;
-  setEdit: React.Dispatch<React.SetStateAction<boolean>>;
-}
+interface ProfielEditProps {}
 
-const ProfileDrawerEditMarkup: React.FC<ProfileDrawerEditMarkupProps> = ({
-  setEdit,
-}) => {
+const ProfileEdit: React.FC<ProfielEditProps> = () => {
+  const history = useHistory();
   const authUser = useAuth((s) => s.authUser);
+  const setAuthUser = useAuth((s) => s.setAuthUser);
   const [data, setData] = useState({ username: '' });
   const [errors, setErrors] = useState<any>({});
   const [loading, setLoading] = useState(false);
@@ -26,6 +24,8 @@ const ProfileDrawerEditMarkup: React.FC<ProfileDrawerEditMarkupProps> = ({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
+
+  console.log(authUser);
 
   const handleUserProfileUpdate = async () => {
     console.log(data);
@@ -44,6 +44,7 @@ const ProfileDrawerEditMarkup: React.FC<ProfileDrawerEditMarkupProps> = ({
         .collection('users')
         .where('username', '==', data.username)
         .get();
+
       if (userDoc.size > 0) {
         setLoading((l) => !l);
         return setErrors({
@@ -56,19 +57,28 @@ const ProfileDrawerEditMarkup: React.FC<ProfileDrawerEditMarkupProps> = ({
         .collection('users')
         .doc(authUser?.uid)
         .update({ username: data.username });
-      setEdit(false);
+
+      setAuthUser({
+        activeRooms: ['asdf'],
+        email: 'asdf.asdf',
+        uid: 'asedgase',
+        username: 'asdfasdg',
+      });
+      history.push('/');
     } catch (err) {}
     setLoading((l) => !l);
   };
 
   return (
     <>
-      <DrawerBody>
+      <Box w="80%" mx="auto">
+        <Text fontSize="3xl">Update Profile</Text>
         <FormControl
           id="username"
           my="2"
           isRequired
           isInvalid={errors.username ? true : false}
+          mt="6"
         >
           <FormLabel>Username</FormLabel>
           <Input
@@ -79,28 +89,18 @@ const ProfileDrawerEditMarkup: React.FC<ProfileDrawerEditMarkupProps> = ({
           />
           <FormErrorMessage>{errors.username}</FormErrorMessage>
         </FormControl>
-      </DrawerBody>
-      <DrawerFooter>
+
         <Button
-          variant="outline"
-          mr={3}
-          onClick={() => {
-            setEdit(false);
-          }}
-        >
-          Cancel
-        </Button>
-        <Button
-          colorScheme="blue"
+          colorScheme="teal"
           onClick={handleUserProfileUpdate}
           isLoading={loading}
-          loadingText="Updaing..."
+          loadingText="Updating..."
         >
           Update
         </Button>
-      </DrawerFooter>
+      </Box>
     </>
   );
 };
 
-export default ProfileDrawerEditMarkup;
+export default ProfileEdit;
