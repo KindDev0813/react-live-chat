@@ -4,7 +4,7 @@ import { Box, Text } from '@chakra-ui/layout';
 import { FormControl, FormLabel } from '@chakra-ui/form-control';
 import { useState } from 'react';
 import ProgressBar from '../ProgressBar';
-import { storage } from '../../firebase';
+import { db, storage } from '../../firebase';
 import { useAuth } from '../../state/authState';
 
 const types = ['image/png', 'image/jpeg'];
@@ -37,6 +37,10 @@ const ProfileImageUpload = ({
 
   const handleImageDelete = async () => {
     await storage.ref(profileImgFileName).delete();
+    await db.collection('users').doc(authUser?.uid).update({
+      profileImgUrl: '',
+      profileImgFileName: '',
+    });
     const newAuthUser: any = {
       ...authUser,
       profileImgUrl: '',
