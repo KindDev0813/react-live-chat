@@ -1,70 +1,136 @@
-import { Box, Text } from '@chakra-ui/layout';
 import React from 'react';
+import { BiDotsHorizontalRounded } from 'react-icons/bi';
+import { Box, Text, VStack } from '@chakra-ui/layout';
 import firebase from 'firebase/app';
+import { FaRegTimesCircle } from 'react-icons/fa';
+import { Button, IconButton } from '@chakra-ui/button';
+import {
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverContent,
+  PopoverTrigger,
+} from '@chakra-ui/popover';
+import { db } from '../../firebase';
 
 interface RoomMessageProps {
   isAuthUser: boolean;
   text: string;
   sender: string;
+  id: string;
+  roomId: string;
 }
 
 export type RoomMessageType = {
+  id: string;
   message: string;
   sender: string;
   sentAt: firebase.firestore.FieldValue;
 };
 
 const RoomMessage: React.FC<RoomMessageProps> = ({
-  isAuthUser,
   text,
   sender,
+  isAuthUser,
+  id,
+  roomId,
 }) => {
+  const handleMessageDelete = async () => {
+    await db
+      .collection('roomMessages')
+      .doc(roomId)
+      .collection('messages')
+      .doc(id)
+      .update({
+        message: '',
+      });
+  };
+
   return (
-    <>
-      {isAuthUser ? (
-        <Box
-          bg="green.100"
-          px="3"
-          py="2"
-          ml="auto"
-          borderRadius="10px"
-          borderTopRightRadius="0"
-          my="1"
-          maxW="75%"
-        >
+    <Box
+      bg={isAuthUser ? 'green.100' : 'blackAlpha.100'}
+      px="3"
+      py="2"
+      ml={isAuthUser ? 'auto' : 'inherit'}
+      mr={isAuthUser ? 'inherit' : 'auto'}
+      borderRadius="10px"
+      borderTopRightRadius={isAuthUser ? 0 : '10px'}
+      borderTopLeftRadius={isAuthUser ? '10px' : 0}
+      my="1"
+      maxW="75%"
+      className="message"
+    >
+      <Box display="flex" alignItems="center" justifyContent="space-between">
+        {isAuthUser && text !== '' && (
+          <Box display="flex" alignItems="center" justifyContent="flex-start">
+            <Popover placement="top-start">
+              <PopoverTrigger>
+                <IconButton
+                  colorScheme="teal"
+                  aria-label="Send email"
+                  variant="link"
+                  visibility="hidden"
+                  sx={{
+                    '.message:hover &': {
+                      visibility: 'visible',
+                    },
+                  }}
+                  icon={<BiDotsHorizontalRounded size={20} />}
+                />
+              </PopoverTrigger>
+              <PopoverContent w="fit-content" p="0">
+                <PopoverArrow />
+                <PopoverBody padding="0">
+                  <VStack>
+                    <Button
+                      variant="ghost"
+                      width="100%"
+                      borderRadius="unset"
+                      color="red.400"
+                      onClick={handleMessageDelete}
+                    >
+                      Delete Message
+                    </Button>
+                    {/* <Divider marginTop="0" />
+                    <Button
+                      width="100%"
+                      borderRadius="unset"
+                      variant="ghost"
+                      color="gray.600"
+                      marginTop="0"
+                    >
+                      Edit Message
+                    </Button> */}
+                  </VStack>
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
+          </Box>
+        )}
+        {text !== '' && (
           <Text
             fontWeight="medium"
             fontStyle="italic"
             fontSize="0.8rem"
-            textAlign="right"
+            textAlign={isAuthUser ? 'right' : 'left'}
           >
             {sender}
           </Text>
-          <Text fontSize="medium">{text}</Text>
-        </Box>
-      ) : (
-        <Box
-          px="3"
-          py="2"
-          borderRadius="10px"
-          borderTopLeftRadius="0"
-          mr="auto"
-          my="1"
-          bg="blackAlpha.100"
-          maxW="75%"
-        >
-          <Text
-            fontWeight="medium"
-            fontStyle="italic"
-            fontSize="0.8rem"
-            textAlign="left"
-          >
-            {sender}
-          </Text>
-          <Text>{text}</Text>
-        </Box>
-      )}
-    </>
+        )}
+      </Box>
+      <Box>
+        {text === '' ? (
+          <Box display="flex" alignItems="center">
+            <FaRegTimesCircle />
+            <Text ml="1" fontStyle="italic">
+              This message is deleted
+            </Text>
+          </Box>
+        ) : (
+          <Text textAlign="right">{text}</Text>
+        )}
+      </Box>
+    </Box>
   );
 };
 

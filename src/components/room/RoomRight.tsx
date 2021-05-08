@@ -24,13 +24,23 @@ const RoomRight: React.FC<RoomRightProps> = ({ room }) => {
       .collection('messages')
       .orderBy('sentAt', 'desc')
       .onSnapshot((qs) => {
-        const messages: RoomMessageType[] = qs.docs
-          .map((doc) => doc.data())
-          .map((msgDoc) => ({
-            message: msgDoc.message,
-            sender: msgDoc.sender,
-            sentAt: msgDoc.sentAt,
-          }));
+        // const messages: RoomMessageType[] = qs.docs
+        //   .map((doc) => doc.data())
+        //   .map((msgDoc) => ({
+        //     message: msgDoc.message,
+        //     sender: msgDoc.sender,
+        //     sentAt: msgDoc.sentAt,
+        //   }));
+        const messages: RoomMessageType[] = [];
+        qs.docs.forEach((doc) => {
+          const data = doc.data();
+          messages.push({
+            id: doc.id,
+            message: data.message,
+            sender: data.sender,
+            sentAt: data.sentAt,
+          });
+        });
 
         setMessages(messages);
       });
@@ -74,8 +84,10 @@ const RoomRight: React.FC<RoomRightProps> = ({ room }) => {
               <RoomMessage
                 text={msg.message}
                 isAuthUser={authUser?.username === msg.sender}
-                key={Math.floor(Math.random() * 99999999)}
+                key={msg.id}
                 sender={msg.sender}
+                id={msg.id}
+                roomId={room.roomId}
               />
             );
           })}

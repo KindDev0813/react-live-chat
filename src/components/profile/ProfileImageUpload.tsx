@@ -7,13 +7,7 @@ import ProgressBar from '../ProgressBar';
 
 const types = ['image/png', 'image/jpeg'];
 
-const ProfileImageUpload = ({
-  uid,
-  profileImgFileName,
-}: {
-  uid: string | undefined;
-  profileImgFileName: string | undefined;
-}) => {
+const ProfileImageUpload = ({ uid }: { uid: string | undefined }) => {
   const [file, setFile] = useState<null | File>(null);
   const [error, setError] = useState<null | string>(null);
 

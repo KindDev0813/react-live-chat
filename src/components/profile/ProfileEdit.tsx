@@ -9,16 +9,12 @@ import { Box, Text } from '@chakra-ui/layout';
 import { useToast } from '@chakra-ui/toast';
 import { useState } from 'react';
 import firebase from 'firebase/app';
-// import { useHistory } from 'react-router';
 import { auth, db } from '../../firebase';
 import { AuthUser, useAuth } from '../../state/authState';
 import ProfileImageUpload from './ProfileImageUpload';
 
-// interface ProfielEditProps {}
-
 const ProfileEdit: React.FC = () => {
   const toast = useToast();
-  // const history = useHistory();
   const authUser = useAuth((s) => s.authUser);
   const setAuthUser = useAuth((s) => s.setAuthUser);
   const [data, setData] = useState({ username: '' });
@@ -234,10 +230,7 @@ const ProfileEdit: React.FC = () => {
           <FormErrorMessage>{errors.username}</FormErrorMessage>
         </FormControl>
 
-        <ProfileImageUpload
-          uid={authUser?.uid}
-          profileImgFileName={authUser?.profileImgFileName}
-        />
+        <ProfileImageUpload uid={authUser?.uid} />
       </Box>
     </>
   );
