@@ -32,6 +32,7 @@ const App: React.FC = () => {
                 email: user?.email ?? 'undefined',
                 activeRooms: user?.activeRooms ?? 'undefined',
                 profileImgUrl: user?.profileImgUrl ?? 'undefined',
+                profileImgFileName: user?.profileImgFileName ?? 'undefined',
               };
               setAuthUser(authUser);
             } else {

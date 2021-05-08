@@ -7,7 +7,13 @@ import ProgressBar from '../ProgressBar';
 
 const types = ['image/png', 'image/jpeg'];
 
-const ProfileImageUpload = ({ uid }: { uid: string | undefined }) => {
+const ProfileImageUpload = ({
+  uid,
+  url,
+}: {
+  uid: string | undefined;
+  url: string | undefined;
+}) => {
   const [file, setFile] = useState<null | File>(null);
   const [error, setError] = useState<null | string>(null);
 
@@ -44,6 +50,9 @@ const ProfileImageUpload = ({ uid }: { uid: string | undefined }) => {
           style={{ display: 'none' }}
           onChange={changeHandler}
         />
+        <Button ml="3" variant="ghost" colorScheme="red">
+          Remove
+        </Button>
       </FormControl>
       <Box>
         {error && (

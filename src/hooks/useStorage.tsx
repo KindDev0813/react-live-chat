@@ -32,6 +32,7 @@ const useStorage = (file: File, uid: string | undefined) => {
         const newAuthUser: any = {
           ...authUser,
           profileImgUrl: url,
+          profileImgFileName: file.name,
         };
         setAuthUser(newAuthUser);
       }
