@@ -63,15 +63,13 @@ const SignUp = () => {
       if (!user) return;
       user.updateProfile({ displayName: data.username });
 
-      await db
-        .collection('users')
-        .doc(user.uid)
-        .set({
-          uid: user.uid,
-          email: data.email,
-          username: data.username,
-          profileImgUrl: '',
-        });
+      await db.collection('users').doc(user.uid).set({
+        uid: user.uid,
+        email: data.email,
+        username: data.username,
+        profileImgUrl: '',
+        profileImgFileName: '',
+      });
 
       toast({
         title: 'Account created.',

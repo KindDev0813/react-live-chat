@@ -8,6 +8,7 @@ export interface AuthUser {
   email: string;
   activeRooms: string[];
   profileImgUrl: string | undefined;
+  profileImgFileName: string | undefined;
 }
 
 type AuthState = {
