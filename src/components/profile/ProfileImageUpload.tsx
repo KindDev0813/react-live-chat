@@ -4,8 +4,6 @@ import { Box, Text } from '@chakra-ui/layout';
 import { FormControl, FormLabel } from '@chakra-ui/form-control';
 import { useState } from 'react';
 import ProgressBar from '../ProgressBar';
-import { db, storage } from '../../firebase';
-import { useAuth } from '../../state/authState';
 
 const types = ['image/png', 'image/jpeg'];
 
@@ -18,8 +16,6 @@ const ProfileImageUpload = ({
 }) => {
   const [file, setFile] = useState<null | File>(null);
   const [error, setError] = useState<null | string>(null);
-  const authUser = useAuth((s) => s.authUser);
-  const setAuthUser = useAuth((s) => s.setAuthUser);
 
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) {
@@ -33,20 +29,6 @@ const ProfileImageUpload = ({
       setFile(null);
       setError('Please select a image file (png or jpeg)');
     }
-  };
-
-  const handleImageDelete = async () => {
-    await storage.ref(profileImgFileName).delete();
-    await db.collection('users').doc(authUser?.uid).update({
-      profileImgUrl: '',
-      profileImgFileName: '',
-    });
-    const newAuthUser: any = {
-      ...authUser,
-      profileImgUrl: '',
-      profileImgFileName: '',
-    };
-    setAuthUser(newAuthUser);
   };
 
   return (
@@ -69,14 +51,6 @@ const ProfileImageUpload = ({
           style={{ display: 'none' }}
           onChange={changeHandler}
         />
-        <Button
-          ml="3"
-          variant="ghost"
-          colorScheme="red"
-          onClick={handleImageDelete}
-        >
-          Remove
-        </Button>
       </FormControl>
       <Box>
         {error && (
