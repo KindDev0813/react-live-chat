@@ -20,51 +20,38 @@ const RoomMessage: React.FC<RoomMessageProps> = ({
   sender,
 }) => {
   return (
-    <>
-      {isAuthUser ? (
-        <Box
-          bg="green.100"
-          px="3"
-          py="2"
-          ml="auto"
-          borderRadius="10px"
-          borderTopRightRadius="0"
-          my="1"
-          maxW="75%"
-        >
-          <Text
-            fontWeight="medium"
-            fontStyle="italic"
-            fontSize="0.8rem"
-            textAlign="right"
-          >
-            {sender}
-          </Text>
-          <Text fontSize="medium">{text}</Text>
-        </Box>
-      ) : (
-        <Box
-          px="3"
-          py="2"
-          borderRadius="10px"
-          borderTopLeftRadius="0"
-          mr="auto"
-          my="1"
-          bg="blackAlpha.100"
-          maxW="75%"
-        >
-          <Text
-            fontWeight="medium"
-            fontStyle="italic"
-            fontSize="0.8rem"
-            textAlign="left"
-          >
-            {sender}
-          </Text>
-          <Text>{text}</Text>
-        </Box>
-      )}
-    </>
+    <RoomMessageLayout text={text} sender={sender} isAuthUser={isAuthUser} />
+  );
+};
+
+const RoomMessageLayout: React.FC<{
+  text: string;
+  sender: string;
+  isAuthUser: boolean;
+}> = ({ text, sender, isAuthUser }) => {
+  return (
+    <Box
+      bg={isAuthUser ? 'green.100' : 'blackAlpha.100'}
+      px="3"
+      py="2"
+      ml={isAuthUser ? 'auto' : 'inherit'}
+      mr={isAuthUser ? 'inherit' : 'auto'}
+      borderRadius="10px"
+      borderTopRightRadius={isAuthUser ? 0 : 'inherit'}
+      borderTopLeftRadius={isAuthUser ? 'inherit' : 0}
+      my="1"
+      maxW="75%"
+    >
+      <Text
+        fontWeight="medium"
+        fontStyle="italic"
+        fontSize="0.8rem"
+        textAlign={isAuthUser ? 'right' : 'left'}
+      >
+        {sender}
+      </Text>
+      <Text>{text}</Text>
+    </Box>
   );
 };
 

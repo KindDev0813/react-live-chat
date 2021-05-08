@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import ProfileEdit from '../components/profile/ProfileEdit';
 import ProfileRoomStatCard from '../components/profile/ProfileRoomStatCard';
 import ProfileUsername from '../components/profile/ProfileUsername';
-import ProfileImage from '../components/ProfileImage';
+import ProfileImage from '../components/profile/ProfileImage';
 import { db } from '../firebase';
 import { useAuth } from '../state/authState';
 
