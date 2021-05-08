@@ -25,6 +25,7 @@ const RoomChatInput: React.FC<RoomChatInputProps> = ({ sender, roomId }) => {
           message,
           sender,
           sentAt: timestamp(),
+          isEdited: false,
         });
       setMessage('');
     } catch (err) {
