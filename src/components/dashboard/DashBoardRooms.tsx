@@ -16,7 +16,8 @@ const DashBoardRooms = () => {
       .doc(authUser?.uid)
       .onSnapshot((qs) => {
         const qsData = qs.data();
-        const rooms = Object.values({ ...qsData });
+        let rooms = Object.values({ ...qsData });
+        rooms.reverse();
         setRooms(rooms);
       });
   }, [authUser?.uid]);
