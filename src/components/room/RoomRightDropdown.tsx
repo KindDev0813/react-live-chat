@@ -77,6 +77,19 @@ const RoomRightDropdown: React.FC<RoomRightDropdownProps> = ({ room }) => {
     history.push('/dashboard');
   };
 
+  const deleteRoomMessages = async () => {
+    const res = await db
+      .collection('roomMessages')
+      .doc(roomId)
+      .collection('messages')
+      .get();
+
+    res.docs.forEach(async (doc) => {
+      await doc.ref.delete();
+    });
+    await db.collection('roomMessages').doc(roomId).delete();
+  };
+
   const handleDeleteRoom = async () => {
     setDeleting((deleting) => !deleting);
     try {
@@ -115,6 +128,7 @@ const RoomRightDropdown: React.FC<RoomRightDropdownProps> = ({ room }) => {
     }
     setDeleting((deleting) => !deleting);
     history.push('/dashboard');
+    deleteRoomMessages();
   };
 
   return (
