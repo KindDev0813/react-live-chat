@@ -234,7 +234,10 @@ const ProfileEdit: React.FC = () => {
           <FormErrorMessage>{errors.username}</FormErrorMessage>
         </FormControl>
 
-        <ProfileImageUpload uid={authUser?.uid} url={authUser?.profileImgUrl} />
+        <ProfileImageUpload
+          uid={authUser?.uid}
+          profileImgFileName={authUser?.profileImgFileName}
+        />
       </Box>
     </>
   );

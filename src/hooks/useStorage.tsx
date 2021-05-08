@@ -9,6 +9,12 @@ const useStorage = (file: File, uid: string | undefined) => {
   const authUser = useAuth((s) => s.authUser);
   const setAuthUser = useAuth((s) => s.setAuthUser);
   useEffect(() => {
+    (async () => {
+      if (authUser?.profileImgFileName !== '') {
+        await storage.ref(authUser?.profileImgFileName).delete();
+      }
+    })();
+
     // references
     const storageRef = storage.ref(file.name);
 
@@ -27,6 +33,7 @@ const useStorage = (file: File, uid: string | undefined) => {
 
         await db.collection('users').doc(uid).update({
           profileImgUrl: url,
+          profileImgFileName: file.name,
         });
         setUrl(url);
         const newAuthUser: any = {
