@@ -1,7 +1,8 @@
 import React from 'react';
 import { BiDotsHorizontalRounded } from 'react-icons/bi';
-import { Box, Divider, Text, VStack } from '@chakra-ui/layout';
+import { Box, Text, VStack } from '@chakra-ui/layout';
 import firebase from 'firebase/app';
+import { FaRegTimesCircle } from 'react-icons/fa';
 import { Button, IconButton } from '@chakra-ui/button';
 import {
   Popover,
@@ -10,34 +11,41 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@chakra-ui/popover';
+import { db } from '../../firebase';
 
 interface RoomMessageProps {
   isAuthUser: boolean;
   text: string;
   sender: string;
+  id: string;
+  roomId: string;
 }
 
 export type RoomMessageType = {
+  id: string;
   message: string;
   sender: string;
   sentAt: firebase.firestore.FieldValue;
 };
 
 const RoomMessage: React.FC<RoomMessageProps> = ({
-  isAuthUser,
   text,
   sender,
+  isAuthUser,
+  id,
+  roomId,
 }) => {
-  return (
-    <RoomMessageLayout text={text} sender={sender} isAuthUser={isAuthUser} />
-  );
-};
+  const handleMessageDelete = async () => {
+    await db
+      .collection('roomMessages')
+      .doc(roomId)
+      .collection('messages')
+      .doc(id)
+      .update({
+        message: '',
+      });
+  };
 
-const RoomMessageLayout: React.FC<{
-  text: string;
-  sender: string;
-  isAuthUser: boolean;
-}> = ({ text, sender, isAuthUser }) => {
   return (
     <Box
       bg={isAuthUser ? 'green.100' : 'blackAlpha.100'}
@@ -53,7 +61,7 @@ const RoomMessageLayout: React.FC<{
       className="message"
     >
       <Box display="flex" alignItems="center" justifyContent="space-between">
-        {isAuthUser && (
+        {isAuthUser && text !== '' && (
           <Box display="flex" alignItems="center" justifyContent="flex-start">
             <Popover placement="top-start">
               <PopoverTrigger>
@@ -79,34 +87,49 @@ const RoomMessageLayout: React.FC<{
                       width="100%"
                       borderRadius="unset"
                       color="red.400"
+                      onClick={handleMessageDelete}
                     >
                       Delete Message
                     </Button>
-                    <Divider p="0" m="0" />
+                    {/* <Divider marginTop="0" />
                     <Button
                       width="100%"
                       borderRadius="unset"
                       variant="ghost"
                       color="gray.600"
+                      marginTop="0"
                     >
                       Edit Message
-                    </Button>
+                    </Button> */}
                   </VStack>
                 </PopoverBody>
               </PopoverContent>
             </Popover>
           </Box>
         )}
-        <Text
-          fontWeight="medium"
-          fontStyle="italic"
-          fontSize="0.8rem"
-          textAlign={isAuthUser ? 'right' : 'left'}
-        >
-          {sender}
-        </Text>
+        {text !== '' && (
+          <Text
+            fontWeight="medium"
+            fontStyle="italic"
+            fontSize="0.8rem"
+            textAlign={isAuthUser ? 'right' : 'left'}
+          >
+            {sender}
+          </Text>
+        )}
       </Box>
-      <Text textAlign="right">{text}</Text>
+      <Box>
+        {text === '' ? (
+          <Box display="flex" alignItems="center">
+            <FaRegTimesCircle />
+            <Text ml="1" fontStyle="italic">
+              This message is deleted
+            </Text>
+          </Box>
+        ) : (
+          <Text textAlign="right">{text}</Text>
+        )}
+      </Box>
     </Box>
   );
 };
