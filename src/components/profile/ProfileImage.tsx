@@ -2,18 +2,18 @@ import React from 'react';
 import FallbackProfileImage from './FallbackProfileImage';
 
 interface ProfileImageProps {
-  url?: string;
+  url: string | undefined;
 }
 
 const ProfileImage: React.FC<ProfileImageProps> = ({ url }) => {
-  if (!url) {
+  if (!url || url === 'undefined') {
     return <FallbackProfileImage />;
   }
 
   return (
     <img
       src={url}
-      alt={url}
+      alt="Fallback Img"
       style={{
         objectPosition: 'center',
         objectFit: 'cover',

@@ -24,13 +24,6 @@ const RoomRight: React.FC<RoomRightProps> = ({ room }) => {
       .collection('messages')
       .orderBy('sentAt', 'desc')
       .onSnapshot((qs) => {
-        // const messages: RoomMessageType[] = qs.docs
-        //   .map((doc) => doc.data())
-        //   .map((msgDoc) => ({
-        //     message: msgDoc.message,
-        //     sender: msgDoc.sender,
-        //     sentAt: msgDoc.sentAt,
-        //   }));
         const messages: RoomMessageType[] = [];
         qs.docs.forEach((doc) => {
           const data = doc.data();
@@ -71,7 +64,7 @@ const RoomRight: React.FC<RoomRightProps> = ({ room }) => {
         <RoomRightDropdown room={room} />
       </Box>
 
-      <Box h="92%">
+      <Box h="92%" pt="2">
         <Box
           h="90%"
           overflowY="scroll"

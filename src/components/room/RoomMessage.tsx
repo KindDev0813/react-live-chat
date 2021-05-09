@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BiDotsHorizontalRounded } from 'react-icons/bi';
-import { Box, Text, VStack } from '@chakra-ui/layout';
+import { Box, Divider, Text, VStack } from '@chakra-ui/layout';
 import firebase from 'firebase/app';
 import { FaRegTimesCircle } from 'react-icons/fa';
 import { Button, IconButton } from '@chakra-ui/button';
@@ -12,6 +12,7 @@ import {
   PopoverTrigger,
 } from '@chakra-ui/popover';
 import { db } from '../../firebase';
+import { Editable, EditableInput, EditablePreview } from '@chakra-ui/editable';
 
 interface RoomMessageProps {
   isAuthUser: boolean;
@@ -35,6 +36,13 @@ const RoomMessage: React.FC<RoomMessageProps> = ({
   id,
   roomId,
 }) => {
+  const [edit, setEdit] = useState(false);
+  const inputRef = React.useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (edit === true) inputRef.current?.focus();
+  }, [edit]);
+
   const handleMessageDelete = async () => {
     await db
       .collection('roomMessages')
@@ -44,6 +52,23 @@ const RoomMessage: React.FC<RoomMessageProps> = ({
       .update({
         message: '',
       });
+  };
+  const handleMessageEdit = async () => {
+    const updatedMessage = inputRef.current?.value;
+    if (updatedMessage?.trim() === '' || updatedMessage?.trim() === text) {
+      setEdit(false);
+      return;
+    }
+
+    await db
+      .collection('roomMessages')
+      .doc(roomId)
+      .collection('messages')
+      .doc(id)
+      .update({
+        message: updatedMessage,
+      });
+    setEdit(false);
   };
 
   return (
@@ -87,20 +112,27 @@ const RoomMessage: React.FC<RoomMessageProps> = ({
                       width="100%"
                       borderRadius="unset"
                       color="red.400"
+                      borderTopLeftRadius="base"
+                      borderTopRightRadius="base"
                       onClick={handleMessageDelete}
                     >
                       Delete Message
                     </Button>
-                    {/* <Divider marginTop="0" />
+                    <Divider marginTop="0 !important" />
                     <Button
                       width="100%"
                       borderRadius="unset"
                       variant="ghost"
                       color="gray.600"
-                      marginTop="0"
+                      marginTop="0 !important"
+                      borderBottomLeftRadius="base"
+                      borderBottomRightRadius="base"
+                      onClick={() => {
+                        setEdit(true);
+                      }}
                     >
                       Edit Message
-                    </Button> */}
+                    </Button>
                   </VStack>
                 </PopoverBody>
               </PopoverContent>
@@ -127,7 +159,19 @@ const RoomMessage: React.FC<RoomMessageProps> = ({
             </Text>
           </Box>
         ) : (
-          <Text textAlign="right">{text}</Text>
+          <Box>
+            <Text textAlign="right">{!edit && text}</Text>
+            {edit && (
+              <Editable
+                defaultValue={text}
+                startWithEditView={true}
+                onSubmit={handleMessageEdit}
+              >
+                <EditablePreview width="100%" textAlign="right" />
+                <EditableInput ref={inputRef} textAlign="left" />
+              </Editable>
+            )}
+          </Box>
         )}
       </Box>
     </Box>
